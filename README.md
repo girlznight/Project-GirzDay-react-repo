@@ -37,10 +37,12 @@ git push origin dev
 [Git 커밋 메시지 이모지 가이드 (Gitmoji)](https://inpa.tistory.com/entry/GIT-%E2%9A%A1%EF%B8%8F-Gitmoji-%EC%82%AC%EC%9A%A9%EB%B2%95-Gitmoji-cli)
 
 ### 🧠 전략 요약
-
+```
 main  ←  dev
           ↑
     (모든 팀원이 작업)
+```
+
 - 모든 작업은 dev 브랜치에서만 진행합니다.
 - main 브랜치는 절대 직접 수정하지 않습니다.
 - 중요한 변경 전에는 git pull로 항상 최신 코드를 받고 충돌을 방지합니다.
