@@ -3,6 +3,7 @@
 ### 🌿 브랜치 전략 / Branch Strategy
 
 해당 프로젝트는 **안정성과 협업의 효율성**을 위해 `main`, `기능명`(ex. login, post...) 브랜치를 아래와 같은 방식으로 운영합니다.
+머지는 pull requset 로 하기!
 
 ---
 
