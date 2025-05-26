@@ -23,8 +23,8 @@
 #### 1. 프로젝트 시작하기
 ```bash
 git clone [레포지터리 주소]     # 프로젝트 처음 받을 때
-git checkout 기능명               # 항상 dev 브랜치에서 작업 시작
-git pull origin 기능명            # 최신 dev 내용 가져오기
+git checkout 기능명               # 항상 해당 기능의 브랜치에서 작업 시작
+git pull origin 기능명            # 최신 해당 기능의 내용 가져오기
 ```
 
 2. **해당 기능의 브랜치 내에서만 작업 수행**
