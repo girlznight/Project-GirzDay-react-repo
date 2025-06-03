@@ -28,8 +28,10 @@
 
 ```bash
 git clone [레포지터리 주소]         # 프로젝트를 처음 받을 때
-git checkout 컴포넌트명             # 항상 해당 기능의 브랜치에서 작업 시작
-git pull origin 컴포넌트명          # 최신 해당 기능의 내용 가져오기
+git checkout 브랜치명             # 항상 해당 기능의 브랜치에서 작업 시작
+git pull origin 브랜치명          # 최신 해당 기능의 내용 가져오기
+
+git switch 브랜치명               # 브랜치 전환
 ```
 
 ### 2. 해당 기능 브랜치 내에서만 작업
