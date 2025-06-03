@@ -1,0 +1,53 @@
+{
+  "user": [
+    {
+      "id": 1,
+      "loginId": "user",
+      "profile": "data:image/png;base64,SAMPLE_IMAGE_BASE64"
+    }
+  ],
+  "auth": [
+    {
+      "id": 1,
+      "password": "user123",
+      "userId": 1
+    }
+  ],
+  "post": [
+    {
+      "id": 1,
+      "userId": 1
+    }
+  ],
+  "textbox": [
+    {
+      "id": 1,
+      "x": 150,
+      "y": 200,
+      "postId": 1,
+      "content": "텍스트 박스 예시입니다"
+    }
+  ],
+  "postit": [
+    {
+      "id": 1,
+      "x": 100,
+      "y": 180,
+      "z": 2,
+      "postId": 1,
+      "content": "포스트잇 메모입니다",
+      "userId": 1
+    }
+  ],
+  "image": [
+    {
+      "id": 1,
+      "x": 300,
+      "y": 250,
+      "z": 1,
+      "postId": 1,
+      "src": "data:image/png;base64,SAMPLE_IMAGE_BASE64",
+      "userId": 1
+    }
+  ]
+}
