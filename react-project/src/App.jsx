@@ -1,9 +1,27 @@
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home/Home.jsx"; 
+import Post from "./pages/Post/Post.jsx";
+import Register from "./pages/Register/Register.jsx";
+import ResetPassword from "./pages/ResetPassword/ResetPassword.jsx";
+import Login from "./pages/Login/Login.jsx";
+import PostEdit from "./pages/PostEdit/PostEdit.jsx";
+import PostCreate from "./pages/PostCreate/PostCreate.jsx";
 
 function App() {
   return (
-    <div className="App">
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/post/:id" element={<Post />} />
+        <Route path="/post/edit/:id" element={<PostEdit />} />
+        <Route path="/post/create" element={<PostCreate />} />
 
-    </div>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
