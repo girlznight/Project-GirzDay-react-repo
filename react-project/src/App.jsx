@@ -1,3 +1,5 @@
+import './index.css';
+
 import { BrowserRouter, Routes, Route } from "react-router";
 import Home from "./pages/Home/Home"; 
 import Post from "./pages/Post/Post";
