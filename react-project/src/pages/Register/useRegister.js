@@ -3,14 +3,14 @@
 
 import {useState} from "react"
 import {useNavigate} from "react-router-dom"
-import { getAuthByLoginId, createUserAndAuth } from "./registerApi";  
+import { createUserAndAuth } from "./registerApi";  
 import { getUserByLoginId } from "../Login/loginApi";
 
 export default function useRegister() {                     //id, 비번, 비번확인을 저장
     const [loginId, setLoginId] = useState("");             //입력된 id저장
     const [password, setPassword] = useState("");           //입력된 비번 저정
     const [confirmPw, setConfirmPw] = useState("");         //비번 확인용 입력 저장
-    const [error, Error] = useState("");                    //에러 메세지 저장
+    const [error, setError] = useState("");                    //에러 메세지 저장
     const navigate = useNavigate();                         //페이지 이동
 
     const handleRegister = async () => {                    //회원가입 버튼을 눌렀을때 

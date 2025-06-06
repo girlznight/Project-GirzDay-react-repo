@@ -10,7 +10,7 @@ import useRegister from "./useRegister"
 export default function Register() {
   const {           //useRegister에서 상태값과 동작 함수를 가져옵니다 
     loginId, setLoginId,            //입력한 id와 그걸 바꾸는 함수
-    passwrod, setPassword,          //입력한 pw와 그걸 바꾸는 함수
+    password, setPassword,          //입력한 pw와 그걸 바꾸는 함수
     confirmPw, setConfirmPw,        //비번 확인 값과 그걸 바꾸는 함수
     error,                          //에러 메세지
     handleRegister                  //회원가입 버튼 눌렀을때 실행할 함수
@@ -29,12 +29,20 @@ export default function Register() {
         placeholder="ID"                                // 흐리게 'ID' 라고 표시
         isError={!!error}                               // 에러 있으면 테두리 빨갛게
       />
+      <AuthInputBox
+         value={password}                               //입력된 비번값
+         onChange={(e) => setPassword(e.target.value)}  //입력될 때 상태 저장
+         placeholder="PW"                               //흐리게 "PW" 라고 표시
+         type="password"                                //입력값이 ●●● 로 보이게
+         isError={!!error}                               //에러가 있으면 테두리 빨갛게
+      />
+
       <AuthInputBox                                     //비번 다시 확인하는 입력창 
         value={confirmPw}                               //입력된 확인 비번 값
         onChange={(e) => setConfirmPw(e.target.value)}  //입력될 때 마다 값 저장
         placeholder="Confirm PW"                        //흐리게 보이는 안내 문구
         type="password"                                 //입력값이 ●●● 로 보이게
-        isError={!!error}                               //에러가 있으면 테두리 빨갛게게
+        isError={!!error}                               //에러가 있으면 테두리 빨갛게
       />
 
       {error && (

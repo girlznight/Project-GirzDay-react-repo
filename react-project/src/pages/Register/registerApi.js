@@ -2,9 +2,9 @@
 //ID 중복확인
 //회원가입 추가 
 
-import { Profiler } from "react";
+// import { Profile } from "react"; 추후 사용
 
-const API_URL = "http://localhost:5000";
+const API_URL = "http://localhost:3000";
 
 //ID로 유저가 이미 존재하는지?
 export async function getUserByLoginId(loginId){
@@ -17,7 +17,7 @@ export async function getUserByLoginId(loginId){
 
 //유저 + 비밀번호를 서버에 저장 
 export async function createUserAndAuth(loginId, password){
-    const userRes = await fetch(`{API_URL}/user`,{            //post요청을 보냄 (URL은 /user, user 테이블에 추가하겠다)
+    const userRes = await fetch(`${API_URL}/user`,{            //post요청을 보냄 (URL은 /user, user 테이블에 추가하겠다)
         method:"POST",
         headers: {"Content-Type": "application/json"},        //보내는 데이터 형식은 JSON
         body: JSON.stringify({                                //실제로 보낼 데이터는 아래의 두개 
@@ -29,7 +29,7 @@ export async function createUserAndAuth(loginId, password){
     const newUser = await userRes.json(); //요청 결과로 서버가 응답해준 유저 데이터를 JSON으로 바꿔서 저장
 
     //auth 테이블에 비번 저장 (userId와 연결)
-    await fetch (`{API_URL}/auth`,{
+    await fetch (`${API_URL}/auth`,{
         method:"POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
