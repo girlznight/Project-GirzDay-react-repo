@@ -4,7 +4,7 @@
 
 // import { Profile } from "react"; 추후 사용
 
-const API_URL = "http://localhost:3000";
+const API_URL = "http://localhost:5000";
 
 //ID로 유저가 이미 존재하는지?
 export async function getUserByLoginId(loginId){
