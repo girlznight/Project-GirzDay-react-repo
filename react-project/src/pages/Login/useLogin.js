@@ -11,7 +11,7 @@ export default function useLogin() {
     const [error, setError] = useState("");         // 에러 메세지 저장
     const navigate = useNavigate();                 // 페이지 이동할때 (예: 로그인 성공하면 게시글 페이지 이동)
 
-    const handleLogin = async () => {              //로그인 버튼을 눌렀을 때 실행행
+    const handleLogin = async () => {              //로그인 버튼을 눌렀을 때 실행
         try{
             const user = await getUserByLoginId(loginId);  //입력한 ID로 user 정보 가져옴
             if(!user) {
