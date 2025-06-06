@@ -1,16 +1,14 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import DraggableTextbox from "./TextboxTest";
-import DraggableImage from "./ImageboxTest";
 import TextIcon from '../assets/postmenubar_text.svg';
 import ImageIcon from '../assets/postmenubar_add-image.svg';
 import CheckIcon from '../assets/postmenubar_check.svg';
 import Textbox from "./TextboxTest";
 import Imagebox from "./ImageboxTest";
 
-function PostMenuBar() {
-  const [textboxes, setTextboxes] = useState([]);
-  const [images, setImages] = useState([]);
+function PostMenuBar({ mode = "create", postId, initialTextboxes = [], initialImages = [] }) {
+  const [textboxes, setTextboxes] = useState(initialTextboxes);
+  const [images, setImages] = useState(initialImages);
   const userId = 1;
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
@@ -68,60 +66,77 @@ function PostMenuBar() {
   };
 
   // POST 요청 
-  const postData = (url, data) => {
+  const postData = (url, data, method = "POST") => {
     return fetch(url, {
-      method: "POST",
+      method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     }).then(res => {
-      if (!res.ok) throw new Error("네트워크 응답 오류");
+      if (!res.ok) throw new Error("요청 실패");
       return res.json();
     });
   };
 
+  
+
+  // url 이 edit 일 때 모드를 "edit" 로 설정
   const handleSubmit = () => {
-  let postId = null;  
+    const postUrl = mode === "edit"
+      ? `http://localhost:5000/post/${postId}`
+      : "http://localhost:5000/post";
 
-  postData("http://localhost:5000/post", { userId })
-    .then(postRes => {
-      postId = postRes.id;  
+    const postMethod = mode === "edit" ? "PATCH" : "POST";
 
-      const textPromises = textboxes
-        .filter(tb => tb.saved)
-        .map(tb => postData("http://localhost:5000/textbox", {
-          x: tb.x,
-          y: tb.y,
-          content: tb.content,
-          postId,
-        }));
+    let postIdToUse = postId;
 
-      const imagePromises = images.map(img => postData("http://localhost:5000/image", {
-        x: img.x,
-        y: img.y,
-        z: img.z,
-        src: img.src,
-        postId,
-        userId,
-      }));
+    const postPromise = mode === "edit"
+      ? Promise.resolve({ id: postId })  // 이미 존재하는 id 사용
+      : postData(postUrl, { userId }, postMethod);
 
-      return Promise.all([...textPromises, ...imagePromises]);
-    })
-    .then(() => {
-      alert("포스트가 성공적으로 저장되었습니다!");
-      navigate(`/post/${postId}`);  // postId를 사용하여 페이지 이동
-    })
-    .catch(err => {
-      console.error(err);
-      alert("저장 중 오류가 발생했습니다.");
-    });
-};
+    postPromise
+      .then(postRes => {
+        if (mode === "create") postIdToUse = postRes.id;
+
+        const textPromises = textboxes
+          .filter(tb => tb.saved)
+          .map(tb =>
+            postData("http://localhost:5000/textbox", {
+              x: tb.x,
+              y: tb.y,
+              content: tb.content,
+              postId: postIdToUse,
+            })
+          );
+
+        const imagePromises = images.map(img =>
+          postData("http://localhost:5000/image", {
+            x: img.x,
+            y: img.y,
+            z: img.z,
+            src: img.src,
+            postId: postIdToUse,
+            userId,
+          })
+        );
+
+        return Promise.all([...textPromises, ...imagePromises]);
+      })
+      .then(() => {
+        alert("Posted!");
+        navigate(`/post/${postIdToUse}`);
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Error occurred while posting.");
+      });
+  };
 
   return (
     <>
       <div className="relative w-full h-[80vh] bg-gray-100 overflow-hidden">
         {textboxes.map((tb, idx) => (
           <Textbox
-            key={idx}
+            key={tb.id ?? idx}
             x={tb.x}
             y={tb.y}
             content={tb.content}
@@ -134,7 +149,7 @@ function PostMenuBar() {
 
         {images.map((img, idx) => (
           <Imagebox
-            key={idx}
+            key={img.id ?? idx}
             x={img.x}
             y={img.y}
             src={img.src}
@@ -158,7 +173,7 @@ function PostMenuBar() {
           onChange={handleImageChange}
         />
         <button onClick={handleSubmit}>
-          <img src={CheckIcon} alt="저장 완료" className="w-6 h-6" />
+          <img src={CheckIcon} alt="저장" className="w-6 h-6" />
         </button>
       </div>
     </>
