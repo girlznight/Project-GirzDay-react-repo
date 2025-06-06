@@ -4,7 +4,7 @@
 const API_URL = "http://localhost:5000";
 
 
-//아이디로 user 정보를 가져옴옴
+//아이디로 user 정보를 가져옴
 export async function getUserByLoginId(loginId) {
     const res = await fetch(`${API_URL}/user?loginId=${loginId}`);  //서버에 get요청 -> id가 일치하는 유저 찾아줘잉잉
     const data = await res.json()                                   //응답을 json으로 변환
