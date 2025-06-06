@@ -22,14 +22,14 @@ export default function Register() {
     <div className="flex flex-col items-center gap-4 mt-20">
       <h1 className="text-3xl font-bold">.Yellowmemo</h1>
       <p className="text-sm text-gray-500">Think, memo, create your own idea board by just One-click</p>
-
-      <AuthInputBox                                     //비밀번호 입력창
+      
+      <AuthInputBox                                     // 아이디 입력창
         value={loginId}                                 // 입력된 ID 값
         onChange={(e) => setLoginId(e.target.value)}    // 입력될 때 상태 저장
         placeholder="ID"                                // 흐리게 'ID' 라고 표시
         isError={!!error}                               // 에러 있으면 테두리 빨갛게
       />
-      <AuthInputBox
+      <AuthInputBox                                     //비번 입력창
          value={password}                               //입력된 비번값
          onChange={(e) => setPassword(e.target.value)}  //입력될 때 상태 저장
          placeholder="PW"                               //흐리게 "PW" 라고 표시
