@@ -3,7 +3,7 @@
 //다른 파일에서 만들어놓은 컴포넌트와 React 기능을 불러옵니다
 import AuthInputBox from "../../components/AuthInputBox";   //아이디 비번 입력 박스
 import Button from "../../components/Button";               //로그인 버튼
-import useLogin from "./useLogin.jsx";                      //로그인 동작을 처리하는 훅을 가져옴
+import useLogin from "./useLogin.js";                      //로그인 동작을 처리하는 훅을 가져옴
 
 //밑의 함수는 실제로 화면에 보여지는 로그인 컴포넌트
 export default function Login() {
@@ -12,7 +12,7 @@ export default function Login() {
     loginId,             // 사용자가 입력한 아이디값
     password,            // 사용자가 입력한 비밀번호 값
     setLoginId,          // 아이디를 바꿔주는 함수
-    setpassword,         // 비밀번호를 바꿔주는 함수
+    setPassword,         // 비밀번호를 바꿔주는 함수
     error,               // 에러 메세지( 틀렸을때 뜨는 말 )
     handleLogin,         // 로그인 버튼을 눌렀을 때 실행되는 함수
   } = useLogin();        // useLogin 훅을 호출하면 위에 값들을 사용할 수 있다
