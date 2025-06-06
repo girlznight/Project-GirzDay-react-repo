@@ -1,7 +1,7 @@
 //이 파일은 로그인 할때 db에 요청을 보내는 코드입니다 
 //예: 이 id 있어요?, 이 비번 있어요?, 최근 글 뭐에요? 같은걸 서버에 물어봄
 
-const API_URL = "http://localhost:3000";
+const API_URL = "http://localhost:5000";
 
 
 //아이디로 user 정보를 가져옴옴
