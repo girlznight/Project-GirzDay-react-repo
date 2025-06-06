@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { DndContext, useDraggable } from "@dnd-kit/core";
 
-function DraggableBox({ id, position, isSelected, onSelect }) {
+function DraggableBox({ id, position }) {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({ id });
     const style = {
         position: "absolute",
@@ -9,7 +9,7 @@ function DraggableBox({ id, position, isSelected, onSelect }) {
         top: position.y + (transform?.y ?? 0),
         cursor: "grab",
         userSelect: "none",
-        border: isSelected ? "1px solid #c33" : "1px solid transparent",
+        border: "1px solid #c99",
         background: "blue",
         padding: 20,
         minWidth: 200,
@@ -24,15 +24,10 @@ function DraggableBox({ id, position, isSelected, onSelect }) {
             {...listeners}
             {...attributes}
             style={style}
-            onClick={e => {
-                e.stopPropagation();
-                onSelect();
-            }}
         >
             <div>
                 texttexttexttexttexttext<br />
-                texttexttexttexttexttext<br />
-                dummy text box
+                texttexttexttexttexttext
             </div>
         </div>
     );
@@ -40,7 +35,6 @@ function DraggableBox({ id, position, isSelected, onSelect }) {
 
 function App() {
     const [position, setPosition] = useState({ x: 300, y: 80 });
-    const [isSelected, setIsSelected] = useState(false);
     const id = "note-1";
 
     const handleDragEnd = event => {
@@ -61,13 +55,10 @@ function App() {
                     position: "relative",
                     background: "#fff",
                 }}
-                onClick={() => setIsSelected(false)}
             >
                 <DraggableBox
                     id={id}
                     position={position}
-                    isSelected={isSelected}
-                    onSelect={() => setIsSelected(true)}
                 />
             </div>
         </DndContext>
