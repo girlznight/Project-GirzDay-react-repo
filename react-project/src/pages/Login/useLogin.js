@@ -11,12 +11,22 @@ export default function useLogin() {
     const [error, setError] = useState("");         // 에러 메세지 저장
     const navigate = useNavigate();                 // 페이지 이동할때 (예: 로그인 성공하면 게시글 페이지 이동)
 
+
+    //로그인 상태 확인용
     const getStoredUserId = () => {                 //로컬 스토리지에 저장된 로그인된 유저 ID를 꺼내는 함수
         return localStorage.getItem("userId");      //로그인 상태를 확인할 때 이 함수를 사용해주세요
     };                                              //예: const userId = getStoredUserId();
                                                     //로그인 안됐으면 null이 반환되고, 로그인 되어있으면 userId(문자열) 반환됩니다
 
+    //로그아웃 처리                                                
+    const logout = () => {
+        localStorage.removeItem("userId");          //로컬스토리지에 저장된 로그인된 사용자 ID를 삭제 -> 이렇게하면 로그인 상태 초기화
+        navigate("/login");                         //로그인 페이지로 이동시킴 -> 로그아웃 후 사용자가 다시 로그인할 수 있도록 보내주는거    
+    };
 
+
+
+    //로그인 처리 
     const handleLogin = async () => {              //로그인 버튼을 눌렀을 때 실행
         try{
             const user = await getUserByLoginId(loginId);  //입력한 ID로 user 정보 가져옴
@@ -61,7 +71,8 @@ export default function useLogin() {
         setPassword,  //비번 변경
         error,        //에러 
         handleLogin,  //로그인 실행 
-        getStoredUserId,
+        getStoredUserId, // 로그인된 유저 Id 가져오기 (로컬스토리지에서)
+        logout,        // 로그아웃 실행 (로컬스토리지 제거, 로그인 페이지 이동)
     };
 
 }
