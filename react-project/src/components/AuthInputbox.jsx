@@ -15,8 +15,8 @@ const AuthInputbox = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`border-[0.5px] rounded-[22px] w-[300px] m-4 shadow-md p-4 ${
-          hasError ? "border border-red-500" : ""
+        className={`border-[2px] rounded-[22px] w-[300px] m-4 shadow-md p-4 box-border ${
+          hasError ? "border-red-500" : "border-white"
         }`}
       />
     </div>
