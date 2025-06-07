@@ -47,7 +47,7 @@ export default function ResetPassword() {
       />
       {error && <p className="text-red-500 text-sm">{error}</p>}  {/* 에러 메시지 보여줌 (에러 있을 때만) */}
 
-      <CustomButton onClick={handleResetPassword} text="Set new PW" />   {/* 비밀번호 재설정 버튼 */}
+      <CustomButton onClick={handleResetPassword}>Set New Password</CustomButton>   {/* 비밀번호 재설정 버튼 */}
 
       <a href="/login" className="text-sm text-blue-500 underline"> {/* 로그인 페이지로 가는 링크 */}
         Login
