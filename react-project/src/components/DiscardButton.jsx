@@ -6,11 +6,11 @@ function DiscardButton({ onDiscard }) {
       onClick={onDiscard}
       title="Discard changes"
       className="
-        fixed bottom-8 right-8 z-50
-        p-3
+        fixed bottom-5 right-8 z-50
+        p-5
         flex items-center justify-center
         transition-colors
-        rounded-lg
+        rounded-xl
         hover:bg-red-100
         group
       "
@@ -20,12 +20,12 @@ function DiscardButton({ onDiscard }) {
         alt="Discard"
         className="
           w-6 h-6
-          transition-colors
+          transition-all
+          duration-200
+          group-hover:scale-110
           group-hover:filter group-hover:invert-29 group-hover:sepia-69 group-hover:saturate-749 group-hover:hue-rotate-314 group-hover:brightness-102 group-hover:contrast-102
         "
-        style={{
-          filter: 'none'
-        }}
+        style={{ filter: 'none' }}
       />
     </button>
   );
