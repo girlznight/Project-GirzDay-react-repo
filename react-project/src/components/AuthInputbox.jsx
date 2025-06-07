@@ -1,6 +1,6 @@
 import React from "react";
 
-const AuthInputbox = ({
+const AuthInputBox = ({
   type,
   placeholder,
   value,
@@ -22,4 +22,4 @@ const AuthInputbox = ({
   );
 };
 
-export default AuthInputbox;
+export default AuthInputBox;
