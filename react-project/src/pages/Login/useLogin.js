@@ -17,6 +17,7 @@ export default function useLogin() {
         return localStorage.getItem("userId");      //로그인 상태를 확인할 때 이 함수를 사용해주세요
     };                                              //예: const userId = getStoredUserId();
                                                     //로그인 안됐으면 null이 반환되고, 로그인 되어있으면 userId(문자열) 반환됩니다
+                                                    //로그아웃 만드는 페이지에 넣어서 써봅시다
 
     //로그아웃 처리                                                
     const logout = () => {
