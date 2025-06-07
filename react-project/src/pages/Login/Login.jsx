@@ -51,7 +51,7 @@ export default function Login() {
       )}
 
       {/* 로그인 버튼 누르면 handleLogin 함수 실행 */}
-      <CustomButton onClick={handleLogin} text="Login" />
+      <CustomButton onClick={handleLogin}>Login</CustomButton>
       <div className="mt-2">
         <a href="/register" className="text-sm text-blue-500 underline">
           I don’t have an account
