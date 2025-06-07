@@ -3,7 +3,7 @@
 //함수나 api요청은 다른 파일에서 가져옵니다
 
 import AuthInputBox from "../../components/AuthInputBox";
-import Button from "../../components/Button";
+import CustomButton from "../../components/CustomButton";
 import useRegister from "./useRegister"
 
 //회원가입 화면 컴포넌트 함수
@@ -49,7 +49,7 @@ export default function Register() {
         <p className="text-red-500 text-sm">{error}</p>   //에러가 있을 때만 빨간 글씨로 화면에 보여줌 
       )}
       
-      <Button onClick={handleRegister} text="Create account"/>  {/*회원가입 버튼*/}
+      <CustomButton onClick={handleRegister} text="Create account"/>  {/*회원가입 버튼*/}
       
       <a href="/login" className="text-sm text-blue-500 underline">I already have account</a>  {/*이미 계정이 있을때 누르면 로그인 페이지로 이동*/}
 
