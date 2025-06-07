@@ -19,19 +19,20 @@ export default function Login() {
 
 
   return (
-    <div className="flex flex-col items-center gap-4 mt-20">
-      <h1 className="text-3xl font-bold">.Yellowmemo</h1>{" "}
-      <p className="text-sm text-gray-500">
-        {" "}
-        Think, memo, create your own idea board by just One-click
-      </p>
+    <div className="min-h-screen bg-[#f6f6f6] flex items-center justify-center">
+      <div className="bg-white rounded-[18px] p-16 w-full max-w-[700px] flex flex-col items-center shadow-none">
+        <h1 className="text-5xl font-bold text-black mb-2 w-full text-left">.Yellowmemo</h1>{" "}
+        <p className="text-base text-black/60 mb-10 w-full text-left">
+          Think, memo, create your own idea board by just One-click
+       </p>
 
+    <div className="flex flex-col items-center w-full mb-2">
       {/* 아이디 입력 박스: 값을 loginId로 채우고, 바뀌면 setLoginId로 저장 */}
       <AuthInputBox
         value={loginId} // 현재 입력된 ID
         onChange={(e) => setLoginId(e.target.value)} // 입력값이 바뀌면 저장
         placeholder="ID" // 흐리게 'ID' 라고 보임
-        isError={!!error} // 에러가 있으면 빨간 테두리
+        hasError={!!error} // 에러가 있으면 빨간 테두리
       />
 
       {/* 비밀번호 입력 박스 */}
@@ -40,28 +41,36 @@ export default function Login() {
         onChange={(e) => setPassword(e.target.value)} // 입력값이 바뀌면 저장
         placeholder="PW" // 흐리게 'PW' 라고 보임
         type="password" // 비밀번호니까 입력한 글자가 안 보임
-        isError={!!error} // 에러가 있으면 빨간 테두리
+        hasError={!!error} // 에러가 있으면 빨간 테두리
       />
+    </div>
 
       {/* 에러 메시지 보여주기 (에러가 있을 때만 보여짐) */}
       {error && (
-        <p className="text-red-500 text-sm">
-          {error} {/* 예: ID 또는 비밀번호가 틀렸습니다 */}
+        <p className="text-[#ff0000] text-base mb-4 w-[400px] text-center">
+           Please check your ID/PASSWORD
         </p>
       )}
 
       {/* 로그인 버튼 누르면 handleLogin 함수 실행 */}
-      <CustomButton onClick={handleLogin}>Login</CustomButton>
-      <div className="mt-2">
-        <a href="/register" className="text-sm text-blue-500 underline">
-          I don’t have an account
+      <CustomButton 
+        onClick={handleLogin}
+        className="w-[400px] h-14 bg-white text-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] font-normal text-lg mb-6"
+        >
+        Login
+      </CustomButton>
+
+      <div className="flex justify-center w-[400px] gap-4">
+        <a href="/register" className="text-base text-[#3b82f6] underline">
+          I don’t have account
         </a>
         <a
           href="/reset-password"
-          className="text-sm text-blue-500 underline ml-4"
+          className="text-base text-[#3b82f6] underline"
         >
           I forgot my password
-        </a>
+          </a>
+        </div>
       </div>
     </div>
   );
