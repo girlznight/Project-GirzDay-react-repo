@@ -19,22 +19,24 @@ export default function Register() {
 //화면에 보여지는 부분
 
   return(
-    <div className="flex flex-col items-center gap-4 mt-20">
-      <h1 className="text-3xl font-bold">.Yellowmemo</h1>
-      <p className="text-sm text-gray-500">Think, memo, create your own idea board by just One-click</p>
+  <div className="min-h-screen bg-[#f6f6f6] flex items-center justify-center">
+    <div className="bg-white rounded-[18px] p-16 w-full max-w-[700px] flex flex-col items-center shadow-none">
+      <h1 className="text-xl font-bold text-black mb-2 w-full text-left">.Yellowmemo</h1>
+      <p className="text-base text-black/60 mb-10 w-full text-left">Think, memo, create your own idea board by just One-click</p>
       
+    <div className="flex flex-col items-center w-full mb-2">
       <AuthInputBox                                     // 아이디 입력창
         value={loginId}                                 // 입력된 ID 값
         onChange={(e) => setLoginId(e.target.value)}    // 입력될 때 상태 저장
         placeholder="ID"                                // 흐리게 'ID' 라고 표시
-        isError={!!error}                               // 에러 있으면 테두리 빨갛게
+        hasError={!!error}                               // 에러 있으면 테두리 빨갛게
       />
       <AuthInputBox                                     //비번 입력창
          value={password}                               //입력된 비번값
          onChange={(e) => setPassword(e.target.value)}  //입력될 때 상태 저장
          placeholder="PW"                               //흐리게 "PW" 라고 표시
          type="password"                                //입력값이 ●●● 로 보이게
-         isError={!!error}                               //에러가 있으면 테두리 빨갛게
+         hasError={!!error}                               //에러가 있으면 테두리 빨갛게
       />
 
       <AuthInputBox                                     //비번 다시 확인하는 입력창 
@@ -42,17 +44,23 @@ export default function Register() {
         onChange={(e) => setConfirmPw(e.target.value)}  //입력될 때 마다 값 저장
         placeholder="Confirm PW"                        //흐리게 보이는 안내 문구
         type="password"                                 //입력값이 ●●● 로 보이게
-        isError={!!error}                               //에러가 있으면 테두리 빨갛게
+        hasError={!!error}                               //에러가 있으면 테두리 빨갛게
       />
+    </div>
 
       {error && (
-        <p className="text-red-500 text-sm">{error}</p>   //에러가 있을 때만 빨간 글씨로 화면에 보여줌 
+        <p className="text-[#ff0000] text-base mb-4 w-[400px] text-center">{error}</p>   //에러가 있을 때만 빨간 글씨로 화면에 보여줌 
       )}
       
-      <CustomButton onClick={handleRegister}>Create account</CustomButton>  {/*회원가입 버튼*/}
+      <CustomButton 
+      onClick={handleRegister}
+      className="w-[400px] h-14 bg-white text-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] font-normal text-lg mb-6"
+      >Create account
+      </CustomButton>  {/*회원가입 버튼*/}
       
-      <a href="/login" className="text-sm text-blue-500 underline">I already have account</a>  {/*이미 계정이 있을때 누르면 로그인 페이지로 이동*/}
+      <a href="/login" className="text-base text-[#3b82f6] underline">I already have account</a>  {/*이미 계정이 있을때 누르면 로그인 페이지로 이동*/}
 
     </div>
+  </div>
   )
 }
