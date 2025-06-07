@@ -11,6 +11,12 @@ export default function useLogin() {
     const [error, setError] = useState("");         // 에러 메세지 저장
     const navigate = useNavigate();                 // 페이지 이동할때 (예: 로그인 성공하면 게시글 페이지 이동)
 
+    const getStoredUserId = () => {                 //로컬 스토리지에 저장된 로그인된 유저 ID를 꺼내는 함수
+        return localStorage.getItem("userId");      //로그인 상태를 확인할 때 이 함수를 사용해주세요
+    };                                              //예: const userId = getStoredUserId();
+                                                    //로그인 안됐으면 null이 반환되고, 로그인 되어있으면 userId(문자열) 반환됩니다
+
+
     const handleLogin = async () => {              //로그인 버튼을 눌렀을 때 실행
         try{
             const user = await getUserByLoginId(loginId);  //입력한 ID로 user 정보 가져옴
@@ -38,6 +44,7 @@ export default function useLogin() {
             setError("로그인 중 오류 발생")         //예기치 못한 에러가 생기면 에러 표시
         }
     
+       
     };
     // 로컬에 저장되어있는 아이디를 꺼내는 함수를 만들기. 그것도 리턴에 넣으면 다른 컴포넌트에서 쓰면 됨 
     // 팀원들한테 꼭 이 함수 써서 로그인 확인하라고 하기.
@@ -54,6 +61,7 @@ export default function useLogin() {
         setPassword,  //비번 변경
         error,        //에러 
         handleLogin,  //로그인 실행 
+        getStoredUserId,
     };
 
 }
