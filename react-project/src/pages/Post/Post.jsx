@@ -1,6 +1,10 @@
+import Sidebar from "../../components/Sidebar";
+
 function Post () {
   return (
-    <h1>This is Post page.</h1>
+    <>
+      <Sidebar />
+    </>
   )
 }
 
