@@ -1,4 +1,3 @@
-import PostMenuBar from "../../components/PostMenuBar"
 
 function Post () {
   return (
