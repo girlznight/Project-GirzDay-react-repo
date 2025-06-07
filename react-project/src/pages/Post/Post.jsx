@@ -1,11 +1,8 @@
-import Sidebar from "../../components/Sidebar";
 
 function Post () {
   return (
-    <>
-      <Sidebar />
-    </>
+      <h1>This is Post page.</h1>
+    
   )
 }
-
-export default Post;
+export default Post
