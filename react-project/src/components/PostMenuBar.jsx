@@ -4,11 +4,11 @@ import CheckIcon from '../assets/postmenubar_check.svg';
 
 function PostMenuBar({ onAddTextbox, onAddImage, onCheck, fileInputRef, onImageFileChange }) {
   return (
-    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-[50%] max-w-md h-16 bg-white shadow-lg rounded-2xl px-20 flex justify-between items-center">
-      <button onClick={onAddTextbox}>
+    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-[50%] max-w-md h-16 bg-white shadow-lg rounded-2xl px-20 flex justify-between items-center" style={{ zIndex: 100 }}>
+      <button onClick={onAddTextbox} className="hover:scale-110 transition-transform duration-200">
         <img src={TextIcon} alt="텍스트박스 추가" className="w-6 h-6" />
       </button>
-      <button onClick={() => fileInputRef.current.click()}>
+      <button onClick={() => fileInputRef.current.click()} className="hover:scale-110 transition-transform duration-200">
         <img src={ImageIcon} alt="이미지 추가" className="w-6 h-6" />
       </button>
       <input
@@ -18,7 +18,7 @@ function PostMenuBar({ onAddTextbox, onAddImage, onCheck, fileInputRef, onImageF
         style={{ display: "none" }}
         onChange={onImageFileChange}
       />
-      <button onClick={onCheck}>
+      <button onClick={onCheck} className="hover:scale-110 transition-transform duration-200">
         <img src={CheckIcon} alt="저장" className="w-6 h-6" />
       </button>
     </div>
