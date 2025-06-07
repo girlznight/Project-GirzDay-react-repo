@@ -13,11 +13,16 @@ export async function getUserByLoginId(loginId) {
 }
 
 //유저id로 비번이 맞는지 확인
-export async function getAuthByLoginId(userId, inputPw) {
-    const res = await fetch(`${API_URL}/auth?userID=${userId}`);     // 해당 userId를 가진 auth 정보 가져오기 (비번 테이블) 요청
+export async function getAuthByLoginId(userId, inputPw) {           //유저 id와 비밀번호가 일치하는지 확인하는 함수 
+    const res = await fetch(`${API_URL}/auth?userID=${userId}`);     //서버에서 userId에 해당하는 auth 정보를 가져옴 (비밀번호 포함된 테이블)
     const data = await res.json();                                  // 응답을 json으로 변환
-    
-    return data.length > 0 && data[0].password === inputPw;        //auth 데이터가 있고, 비번이 사용자가 입력한거랑 같으면 true
+
+    if (data.length === 0) return false;                            //해당 유저가 없으면 false 반환( 비회원 또는 등록되지 않은 사용자 )
+
+    const storedPw = String(data[0].password).trim;                 //저장된 비빌번호를 문자열로 변환하고, 앞뒤 공백 제거
+    const input = String(inputPw).trim;                             //사용자가 입력한 비밀번호도 문자열로 변환하고 공백 제거
+            
+    return storedPw === input;                                      //비밀번호가 일치하면 true, 아니면 false      
 }
 
 //최근에 작성한 게시글 하나 가져옴
