@@ -1,4 +1,4 @@
-// Drag.jsx를 사용할 때 DragContext로 감싸서 사용해야함
+// Drag.jsx를 사용할 때 DndContext로 감싸서 사용해야함
 // onDragEnd 등 이벤트 핸들러를 통해 드래그가 끝났을 때 상태 업데이트 가능
 import { useDraggable } from "@dnd-kit/core";
 
@@ -23,6 +23,7 @@ function Drag({ id, position, children, style, ...props }) {
             {...props}
         >
             {children}
+            {/* text, image or sth */}
         </div>
     );
 }
