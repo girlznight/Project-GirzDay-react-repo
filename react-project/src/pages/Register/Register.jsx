@@ -20,7 +20,7 @@ export default function Register() {
 
   return(
   <div className="min-h-screen bg-[#f6f6f6] flex items-center justify-center">
-    <div className="w-full max-w-[700px] flex flex-col items-center">
+    <div className="bg-white rounded-[18px] p-16 w-full max-w-[700px] flex flex-col items-center shadow-none">
       <h1 className="text-5xl font-bold text-black mb-2 w-full text-left">.Yellowmemo</h1>
       <p className="text-base text-black/60 mb-10 w-full text-left">Think, memo, create your own idea board by just One-click</p>
       
@@ -54,16 +54,12 @@ export default function Register() {
       
       <CustomButton 
       onClick={handleRegister}
-      className="w-[200px] h-14 bg-white text-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] font-normal text-lg mt-4 mb-6"
+      className="w-[400px] h-14 bg-white text-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] font-normal text-lg mb-6"
       >Create account
       </CustomButton>  {/*회원가입 버튼*/}
       
-      <span className="text-base text-black">
-       I already have{" "}
-      <a href="/login" className="text-[#3b82f6] no-underline hover:underline">
-        account   {/*이미 계정이 있을때 누르면 로그인 페이지로 이동*/}
-      </a>
-      </span>
+      <a href="/login" className="text-base text-[#3b82f6] underline">I already have account</a>  {/*이미 계정이 있을때 누르면 로그인 페이지로 이동*/}
+
     </div>
   </div>
   )

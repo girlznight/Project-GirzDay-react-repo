@@ -19,7 +19,7 @@ export default function ResetPassword() {
   // 실제 화면 구성 부분
   return (
     <div className="min-h-screen bg-[#f6f6f6] flex items-center justify-center">
-      <div className="w-full max-w-[700px] flex flex-col items-center">
+      <div className="bg-white rounded-[18px] p-16 w-full max-w-[700px] flex flex-col items-center shadow-none">
         <h1 className="text-5xl font-bold text-black mb-2 w-full text-left">
           .Yellowmemo
         </h1>
@@ -70,7 +70,7 @@ export default function ResetPassword() {
 
         <CustomButton //비밀번호 재설정 버튼
           onClick={handleResetPassword}
-          className="w-[200px] h-14 bg-white text-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] font-normal text-lg mt-4 mb-6"
+          className="w-[400px] h-14 bg-white text-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] font-normal text-lg mb-4"
         >
           Set New Password
         </CustomButton>
