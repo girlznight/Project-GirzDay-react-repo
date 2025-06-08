@@ -20,7 +20,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-[#f6f6f6] flex items-center justify-center">
-      <div className="bg-white rounded-[18px] p-16 w-full max-w-[700px] flex flex-col items-center shadow-none">
+      <div className="w-full max-w-[700px] flex flex-col items-center">
         <h1 className="text-5xl font-bold text-black mb-2 w-full text-left">.Yellowmemo</h1>{" "}
         <p className="text-base text-black/60 mb-10 w-full text-left">
           Think, memo, create your own idea board by just One-click
@@ -55,22 +55,25 @@ export default function Login() {
       {/* 로그인 버튼 누르면 handleLogin 함수 실행 */}
       <CustomButton 
         onClick={handleLogin}
-        className="w-[400px] h-14 bg-white text-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] font-normal text-lg mb-6"
+        className="w-[200px] h-14 bg-white text-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] font-normal text-lg mt-4 mb-6"
         >
         Login
       </CustomButton>
 
-      <div className="flex justify-center w-[400px] gap-4">
-        <a href="/register" className="text-base text-[#3b82f6] underline">
-          I don’t have account
+     <span className="flex flex-col gap-2 items-center w-[400px]">
+      <p className="text-base text-black">
+        I don’t have{" "}
+        <a href="/register" className="text-[#3b82f6] underline">
+          account
         </a>
-        <a
-          href="/reset-password"
-          className="text-base text-[#3b82f6] underline"
-        >
-          I forgot my password
+    </p>
+    <p className="text-base text-black">
+      I forgot my{" "}
+      <a href="/reset-password" className="text-[#3b82f6] underline">
+        password
           </a>
-        </div>
+        </p>
+        </span>
       </div>
     </div>
   );
