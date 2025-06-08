@@ -1,21 +1,17 @@
-import React, { useState } from "react";
-import { DndContext, useDraggable } from "@dnd-kit/core";
+// Drag.jsx를 사용할 때 DragContext로 감싸서 사용해야함
+// onDragEnd 등 이벤트 핸들러를 통해 드래그가 끝났을 때 상태 업데이트 가능
+import { useDraggable } from "@dnd-kit/core";
 
-function DraggableBox({ id, position }) {
+function Drag({ id, position, children, style, ...props }) {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({ id });
-    const style = {
+
+    const dragStyle = {
         position: "absolute",
         left: position.x + (transform?.x ?? 0),
         top: position.y + (transform?.y ?? 0),
         cursor: "grab",
         userSelect: "none",
-        border: "1px solid #c99",
-        background: "blue",
-        padding: 20,
-        minWidth: 200,
-        minHeight: 60,
-        boxSizing: "border-box",
-        transition: "border 0.15s",
+        ...style, // 외부에서 주입한 스타일이 있으면 덮어씀
     };
 
     return (
@@ -23,46 +19,12 @@ function DraggableBox({ id, position }) {
             ref={setNodeRef}
             {...listeners}
             {...attributes}
-            style={style}
+            style={dragStyle}
+            {...props}
         >
-            <div>
-                texttexttexttexttexttext<br />
-                texttexttexttexttexttext
-            </div>
+            {children}
         </div>
     );
 }
 
-function App() {
-    const [position, setPosition] = useState({ x: 300, y: 80 });
-    const id = "note-1";
-
-    const handleDragEnd = event => {
-        const { delta } = event;
-        setPosition(pos => ({
-            x: pos.x + delta.x,
-            y: pos.y + delta.y,
-        }));
-        // db 저장 필요 시 여기에 fetch 추가
-    };
-
-    return (
-        <DndContext onDragEnd={handleDragEnd}>
-            <div
-                style={{
-                    width: "100vw",
-                    height: "100vh",
-                    position: "relative",
-                    background: "#fff",
-                }}
-            >
-                <DraggableBox
-                    id={id}
-                    position={position}
-                />
-            </div>
-        </DndContext>
-    );
-}
-
-export default App;
+export default Drag;
