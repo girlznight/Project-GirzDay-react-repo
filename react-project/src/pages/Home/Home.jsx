@@ -89,53 +89,14 @@ function Home() {
           )}
         </div>
         {/* 카피라이트 */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-gray-500 text-xs sm:text-sm text-center w-[90vw] max-w-2xl">
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 text-gray-500 text-xs sm:text-sm text-center w-[90vw] max-w-2xl">
           <p>© 2025 Yellowmemo. All rights reserved to team Girlz Night.</p>
         </div>
         {/* 애니메이션 */}
-        <style>
-          {`
-            @keyframes wind {
-              0% { transform: rotate(-5deg); }
-              10% { transform: rotate(-7deg); }
-              20% { transform: rotate(-3deg); }
-              30% { transform: rotate(-8deg); }
-              40% { transform: rotate(-4deg); }
-              50% { transform: rotate(-9deg); }
-              60% { transform: rotate(-3deg);}
-              70% { transform: rotate(-7deg);}
-              80% { transform: rotate(-4deg);}
-              90% { transform: rotate(-8deg);}
-              100% { transform: rotate(-5deg);}
-            }
-            .animate-wind {
-              animation: wind 2.2s cubic-bezier(.36,.07,.19,.97) infinite;
-            }
-            @keyframes fadein {
-              from { opacity: 0; }
-              to   { opacity: 1; }
-            }
-            .animate-fadein {
-              animation: fadein 0.8s;
-            }
-              .fade-in-up {
-              opacity-0 translate-y-4 transition-all duration-700 ease-out;
-            }
 
-            .fade-in-up.appear {
-              opacity-100 translate-y-0;
-            }
-            
-            .fadeSlide {
-              1s cubic-bezier(0.22, 1, 0.36, 1) forwards
-            }
-
-          `}
-        </style>
       </section>
-
       {/* 2. About(소개) 섹션 */}
-      <section className="w-full flex flex-col items-center justify-center mt-24 mb-16">
+      <section className="w-full flex flex-col items-center justify-center mt-24 mb-16 min-h-screen">
         <div className="w-full max-w-2xl px-4 space-y-10">
           <FadeInOnScroll>
             <p className="text-4xl font-semibold text-gray-900">작지만, 꼭 필요한 아이디어.</p>
@@ -185,7 +146,7 @@ function Home() {
           <div className="space-y-3">
             <FadeInOnScroll delay={0.7}>
               <p className="text-lg text-gray-700 leading-relaxed fade-in-up">
-                프로젝트는 오픈소스로 운영되며,{" "}
+                프로젝트는 {" "}
                 <a
                   href="https://github.com/girlznight/Project-GirzDay-react-repo"
                   target="_blank"
@@ -207,9 +168,59 @@ function Home() {
                 함께 더 좋은 메모 공간을 만들어가고 싶습니다.
               </p>
             </FadeInOnScroll>
+            <br />
+            <br />
+            <FadeInOnScroll delay={0.8}>
+              <p className="text-lg text-gray-700 leading-relaxed fade-in-up text-center">
+                Team Girlz Night
+              </p>
+            </FadeInOnScroll>
           </div>
         </div>
       </section>
+      <style>
+          {`
+            @keyframes wind {
+              0% { transform: rotate(-5deg); }
+              10% { transform: rotate(-7deg); }
+              20% { transform: rotate(-3deg); }
+              30% { transform: rotate(-8deg); }
+              40% { transform: rotate(-4deg); }
+              50% { transform: rotate(-9deg); }
+              60% { transform: rotate(-3deg);}
+              70% { transform: rotate(-7deg);}
+              80% { transform: rotate(-4deg);}
+              90% { transform: rotate(-8deg);}
+              100% { transform: rotate(-5deg);}
+            }
+            .animate-wind {
+              animation: wind 2.2s cubic-bezier(.36,.07,.19,.97) infinite;
+            }
+            @keyframes fadein {
+              from { opacity: 0; }
+              to   { opacity: 1; }
+            }
+            .animate-fadein {
+              animation: fadein 0.8s;
+            }
+              .fade-in-up {
+              opacity-0 translate-y-4 transition-all duration-700 ease-out;
+            }
+
+            .fade-in-up.appear {
+              opacity-100 translate-y-0;
+            }
+            
+            .fadeSlide {
+              1s cubic-bezier(0.22, 1, 0.36, 1) forwards
+            }
+
+            html {
+              background-color: #fcfcf8;
+            }
+
+          `}
+        </style>
     </div>
   );
 }
