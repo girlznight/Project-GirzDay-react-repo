@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import StickyNote from "../../assets/sticky-note.png";
 import FadeInOnScroll from "../../components/FadeInOnScroll"; // 앞서 안내한 스크롤 효과 컴포넌트
@@ -6,6 +6,14 @@ import FadeInOnScroll from "../../components/FadeInOnScroll"; // 앞서 안내�
 function Home() {
   const [step, setStep] = useState("note");
   const navigate = useNavigate();
+  
+  // 페이지가 로드될 때 스크롤 위치를 맨 위로 설정하고, 스크롤 복원 방지
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleNoteClick = async () => {
     setStep("started");
@@ -42,11 +50,11 @@ function Home() {
   };
 
   return (
-    <div className="w-full min-h-screen max-h-full bg-[#fcfcf8]">
+    <div className="w-full min-h-screen bg-[#fcfcf8]">
       {/* 1. 메인(포스트잇) 섹션 */}
       <section
         className={`
-          h-screen flex flex-col items-center justify-center relative
+          min-h-screen flex flex-col items-center justify-center relative
           transition-colors duration-1000
           ${step === "fade" ? "opacity-0 transition-opacity duration-1000" : "opacity-100"}
         `}
