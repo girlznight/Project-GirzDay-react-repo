@@ -19,8 +19,8 @@ export async function getAuthByLoginId(userId, inputPw) {           //유저 id�
 
     if (data.length === 0) return false;                            //해당 유저가 없으면 false 반환( 비회원 또는 등록되지 않은 사용자 )
 
-    const storedPw = String(data[0].password).trim;                 //저장된 비빌번호를 문자열로 변환하고, 앞뒤 공백 제거
-    const input = String(inputPw).trim;                             //사용자가 입력한 비밀번호도 문자열로 변환하고 공백 제거
+    const storedPw = String(data[0].password).trim();                 //저장된 비빌번호를 문자열로 변환하고, 앞뒤 공백 제거
+    const input = String(inputPw).trim();                             //사용자가 입력한 비밀번호도 문자열로 변환하고 공백 제거
             
     return storedPw === input;                                      //비밀번호가 일치하면 true, 아니면 false      
 }
