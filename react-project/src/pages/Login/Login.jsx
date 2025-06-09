@@ -19,14 +19,14 @@ export default function Login() {
 
 
   return (
-    <div className="min-h-screen bg-[#f6f6f6] flex items-center justify-center">
-      <div className="w-full max-w-[700px] flex flex-col items-center">
-        <h1 className="text-5xl font-bold text-black mb-2 w-full text-left">.Yellowmemo</h1>{" "}
-        <p className="text-base text-black/60 mb-10 w-full text-left">
+    <div className="min-h-screen bg-[#f6f6f6] px-16 pt-20">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-gray-900">.Yellowmemo</h1>
+        <p className="text-lg sm:text-lg md:text-xl lg:text-2xl text-gray-700 font-normal">
           Think, memo, create your own idea board by just One-click
        </p>
-
-    <div className="flex flex-col items-center w-full mb-2">
+    
+   <div className="flex flex-col items-center w-full mt-24">  
+    <div className="flex flex-col items-center w-full max-w-[700px]">
       {/* 아이디 입력 박스: 값을 loginId로 채우고, 바뀌면 setLoginId로 저장 */}
       <AuthInputBox
         value={loginId} // 현재 입력된 ID
@@ -47,7 +47,7 @@ export default function Login() {
 
       {/* 에러 메시지 보여주기 (에러가 있을 때만 보여짐) */}
       {error && (
-        <p className="text-[#ff0000] text-base mb-4 w-[400px] text-center">
+        <p className="text-[#ff0000] text-base mb-1 w-[400px] text-center">
            Please check your ID/PASSWORD
         </p>
       )}
@@ -55,7 +55,7 @@ export default function Login() {
       {/* 로그인 버튼 누르면 handleLogin 함수 실행 */}
       <CustomButton 
         onClick={handleLogin}
-        className="w-[180px] h-14 bg-white text-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] font-normal text-lg mt-4 mb-6"
+        className="w-[180px] h-14 bg-white text-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] font-normal text-lg mt-5 mb-10"
         >
         Login
       </CustomButton>
