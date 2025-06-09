@@ -5,8 +5,6 @@ import ProfileIcon from "../assets/sticky-note.png";
 
 function Sidebar() {
   const userId = localStorage.getItem("userId");
-
-  // 👇 모든 Hook은 조건문 밖에서 선언!
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [textboxes, setTextboxes] = useState([]);
@@ -32,7 +30,7 @@ function Sidebar() {
       .then(setTextboxes);
   }, [userId]);
 
-  // 🔒 로그인 안 된 경우 UI 차단
+  // 로그인 안 된 경우 UI 차단
   if (!userId) {
     return (
       <aside className="fixed top-0 left-0 h-full w-[260px] bg-white/95 border-r border-gray-100 flex flex-col items-center justify-center z-50 shadow">
@@ -69,7 +67,7 @@ function Sidebar() {
    const getPostTitle = (postId) => {
       const postTextboxes = textboxes.filter(t => String(t.postId) === String(postId));
       if (postTextboxes.length === 0) return "Post without title!";
-      // content가 있는 첫 텍스트박스를 찾기
+      // content가 있는 첫 텍스트박스를 찾기, 없을 경우 "Post without title!" 반환
         const nonEmpty = postTextboxes.find(tb => tb.content && tb.content.trim() !== "");
       return nonEmpty ? nonEmpty.content.split("\n")[0] : "Post without title!";
     };
