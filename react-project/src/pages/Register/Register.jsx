@@ -54,7 +54,7 @@ export default function Register() {
       
       <CustomButton 
       onClick={handleRegister}
-      className="w-[200px] h-14 bg-white text-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] font-normal text-lg mt-4 mb-6"
+      className="w-[180px] h-14 bg-white text-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] font-normal text-lg mt-4 mb-6"
       >Create account
       </CustomButton>  {/*회원가입 버튼*/}
       
