@@ -18,16 +18,16 @@ export default function ResetPassword() {
 
   // 실제 화면 구성 부분
   return (
-    <div className="min-h-screen bg-[#f6f6f6] flex items-center justify-center">
-      <div className="w-full max-w-[700px] flex flex-col items-center">
-        <h1 className="text-5xl font-bold text-black mb-2 w-full text-left">
-          .Yellowmemo
-        </h1>
-        <p className="text-base text-black/60 mb-10 w-full text-left">
-          Think, memo, create your own idea board by just One-click
-        </p>
+    <div className="min-h-screen bg-[#f6f6f6] px-16 pt-20">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-gray-900">
+        .Yellowmemo
+      </h1>
+      <p className="text-lg sm:text-lg md:text-xl lg:text-2xl text-gray-700 font-normal">
+        Think, memo, create your own idea board by just One-click
+      </p>
 
-        <div className="w-full flex flex-col items-center mb-2">
+      <div className="flex flex-col items-center w-full mt-24">
+        <div className="flex flex-col items-center w-full max-w-[700px]">
           <AuthInputBox
             value={loginId}
             onChange={(e) => setLoginId(e.target.value)}
@@ -76,7 +76,6 @@ export default function ResetPassword() {
         </CustomButton>
 
         <a href="/login" className="text-base text-[#3b82f6] underline">
-          {" "}
           {/* 로그인 페이지로 가는 링크 */}
           Login
         </a>
