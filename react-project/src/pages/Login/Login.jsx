@@ -55,7 +55,7 @@ export default function Login() {
       {/* 로그인 버튼 누르면 handleLogin 함수 실행 */}
       <CustomButton 
         onClick={handleLogin}
-        className="w-[200px] h-14 bg-white text-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] font-normal text-lg mt-4 mb-6"
+        className="w-[180px] h-14 bg-white text-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] font-normal text-lg mt-4 mb-6"
         >
         Login
       </CustomButton>
