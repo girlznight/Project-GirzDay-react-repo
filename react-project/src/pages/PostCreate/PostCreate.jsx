@@ -4,7 +4,6 @@ import DiscardButton from "../../components/DiscardButton";
 import PostMenuBar from "../../components/PostMenuBar";
 import TextboxTest from "../../components/TextboxTest";
 import ImageboxTest from "../../components/ImageboxTest";
-import PostBottomButton from "../../components/PostBottomButton";
 
 function PostCreate() {
   const [textboxes, setTextboxes] = useState([]);
