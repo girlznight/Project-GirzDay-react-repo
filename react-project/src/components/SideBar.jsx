@@ -1,21 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import CustomButton from "./CustomButton";
 import PencilIcon from "../assets/sidebar_pencil.svg";
-import ProfileIcon from "../assets/sidebar_profile.svg";
-
+import ProfileIcon from "../assets/sticky-note.png";
 
 function Sidebar() {
-  // userId는 localStorage에서 가져오고 기본값 1
   const userId = localStorage.getItem("userId");
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [textboxes, setTextboxes] = useState([]);
   const fileInputRef = useRef();
   const [myPosts, setMyPosts] = useState([]);
-  const [filter, setFilter] = useState("all"); // "all" or "mine"
+  const [filter, setFilter] = useState("all");
 
-  // 유저, 포스트, 텍스트박스 데이터 fetch
   useEffect(() => {
+    if (!userId) return; // userId 없으면 fetch 안 함
     fetch(`http://localhost:5000/user/${userId}`)
       .then(res => res.json())
       .then(setUser);
@@ -30,21 +28,35 @@ function Sidebar() {
     fetch(`http://localhost:5000/textbox`)
       .then(res => res.json())
       .then(setTextboxes);
-  }, [userId, posts.length, myPosts.length]);
+  }, [userId]);
 
-  // 프로필 이미지 업로드
+  // 로그인 안 된 경우 UI 차단
+  if (!userId) {
+    return (
+      <aside className="fixed top-0 left-0 h-full w-[260px] bg-white/95 border-r border-gray-100 flex flex-col items-center justify-center z-50 shadow">
+        <div className="text-center">
+          <div className="text-lg text-gray-700 mb-4"> Log in to unlock the magic! </div>
+          <CustomButton
+            onClick={() => window.location.assign("/login")}
+            className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-900 transition"
+          >
+            Continue to Login
+          </CustomButton>
+        </div>
+      </aside>
+    );
+  }
+
   const handleProfileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader(); // FileReader를 사용하여 사용자의 로컬 파일을 읽음
+    const reader = new FileReader();
     reader.onloadend = () => {
-      const base64 = reader.result; // 파일을 base64로 인코딩 후 변수에 넣음
-
-      // 서버에 PATCH 요청을 보내 로그인 한 유저(local storage에 저장된 userId)의 프로필 이미지 업데이트
+      const base64 = reader.result;
       fetch(`http://localhost:5000/user/${userId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ profile: base64 }), // base64로 인코딩된 이미지 정보 문자열을 서버에 전송
+        body: JSON.stringify({ profile: base64 }),
       })
         .then(res => res.json())
         .then(setUser);
@@ -52,23 +64,22 @@ function Sidebar() {
     reader.readAsDataURL(file);
   };
 
-  // 각 post의 textbox content에서 첫 줄을 제목으로 사용
-  // 만약 첫 줄(텍스트 박스)이 없다면 "(빈 포스트)"로 표시
-  const getPostTitle = (postId) => {
-    const tb = textboxes.find(t => String(t.postId) === String(postId));
-    return tb ? tb.content.split("\n")[0] : "(빈 포스트)"; //\n으로 줄바꿈된 첫 줄을 제목으로 사용
-  };
+   const getPostTitle = (postId) => {
+      const postTextboxes = textboxes.filter(t => String(t.postId) === String(postId));
+      if (postTextboxes.length === 0) return "Post without title!";
+      // content가 있는 첫 텍스트박스를 찾기, 없을 경우 "Post without title!" 반환
+        const nonEmpty = postTextboxes.find(tb => tb.content && tb.content.trim() !== "");
+      return nonEmpty ? nonEmpty.content.split("\n")[0] : "Post without title!";
+    };
 
-  // 페이지 이동
-  const goTo = (url) => window.location.assign(url); // 페이지 이동 함수
-  if (!user) return null; // 유저 정보가 없으면 아무것도 렌더링하지 않음
+  const goTo = (url) => window.location.assign(url);
+  if (!user) return null;
 
-  // 필터링된 목록
   const postList = filter === "all" ? posts : myPosts;
 
   return (
-    <aside className="fixed top-0 left-0 h-full w-[260px] bg-white/80 border-r border-gray-100 flex flex-col items-center z-50 shadow">
-       {/* 프로필 영역 */}
+    <aside className="fixed top-0 left-0 h-full w-[260px] bg-white/95 border-r border-gray-100 flex flex-col items-center z-50 shadow">
+      {/* 프로필 영역 */}
       <div className="mt-10 mb-4 flex flex-col items-center">
         <div className="relative">
           <img
