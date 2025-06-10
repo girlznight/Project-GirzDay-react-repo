@@ -11,7 +11,7 @@ function PostCreate() {
   const [images, setImages] = useState([]);
   const fileInputRef = useRef();
   const navigate = useNavigate();
-  const userId = 1;
+  const userId = Number(localStorage.getItem("userId"));
 
   // 텍스트박스 추가
   const handleAddTextbox = () => {
