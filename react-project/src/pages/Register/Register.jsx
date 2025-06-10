@@ -19,12 +19,14 @@ export default function Register() {
 //화면에 보여지는 부분
 
   return(
-  <div className="min-h-screen bg-[#f6f6f6] flex items-center justify-center">
-    <div className="w-full max-w-[700px] flex flex-col items-center">
-      <h1 className="text-5xl font-bold text-black mb-2 w-full text-left">.Yellowmemo</h1>
-      <p className="text-base text-black/60 mb-10 w-full text-left">Think, memo, create your own idea board by just One-click</p>
-      
-    <div className="flex flex-col items-center w-full mb-2">
+      <div className="min-h-screen bg-[#f6f6f6] px-16 pt-20">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-gray-900">.Yellowmemo</h1>
+          <p className="text-lg sm:text-lg md:text-xl lg:text-2xl text-gray-700 font-normal">
+            Think, memo, create your own idea board by just One-click
+          </p>
+
+  <div className="flex flex-col items-center w-full mt-24">  
+    <div className="flex flex-col items-center w-full max-w-[700px]">
       <AuthInputBox                                     // 아이디 입력창
         value={loginId}                                 // 입력된 ID 값
         onChange={(e) => setLoginId(e.target.value)}    // 입력될 때 상태 저장
@@ -54,7 +56,7 @@ export default function Register() {
       
       <CustomButton 
       onClick={handleRegister}
-      className="w-[200px] h-14 bg-white text-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] font-normal text-lg mt-4 mb-6"
+      className="w-[180px] h-14 bg-white text-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] font-normal text-lg mt-4 mb-6"
       >Create account
       </CustomButton>  {/*회원가입 버튼*/}
       
