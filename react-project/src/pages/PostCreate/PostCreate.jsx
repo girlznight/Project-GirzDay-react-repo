@@ -22,7 +22,7 @@ function PostCreate() {
       ...prev,
       {
         id: newId,
-        content: "dummy text",
+        content: "",
         x: 400 + Math.random() * 50,
         y: 100 + prev.length * 70,
       },

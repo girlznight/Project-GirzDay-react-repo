@@ -76,6 +76,7 @@ function DraggableTextbox({
       >
         {editing ? (
           <textarea
+            placeholder="Type here..."
             ref={textareaRef}
             className="w-full bg-transparent text-black outline-none resize-none overflow-hidden text-center text-lg"
             value={content}
