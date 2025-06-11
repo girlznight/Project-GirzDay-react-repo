@@ -1,9 +1,11 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import DiscardButton from "../../components/DiscardButton";
+import { DndContext, useDraggable } from "@dnd-kit/core";
 import PostMenuBar from "../../components/PostMenuBar";
+import DiscardButton from "../../components/DiscardButton";
 import DraggableTextbox from "../../components/DraggableTextbox";
 import DraggableImage from "../../components/DraggableImage";
+
 
 function PostCreate() {
   const fileInputRef = useRef();
@@ -12,50 +14,34 @@ function PostCreate() {
 
   const [textboxes, setTextboxes] = useState([]);
   const [images, setImages] = useState([]);
-  const [selectedId, setSelectedId] = useState(null);
   const [editingId, setEditingId] = useState(null);
 
-  // 화면 스크롤 방지
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
-
+  // 텍스트박스 추가
   const handleAddTextbox = () => {
-    const newId = Date.now();
-    setTextboxes(prev =>
-      [
-        ...prev,
-        {
-          id: newId,
-          content: "",
-          x: 400,
-          y: 100 + prev.length * 70, // prev.length 사용!
-        },
-      ]
-    );
+    const newId = `textbox-${Date.now()}`;
+    setTextboxes(prev => [
+      ...prev,
+      {
+        id: newId,
+        content: "dummy text",
+        x: 400 + Math.random() * 50,
+        y: 100 + prev.length * 70,
+      },
+    ]);
     setEditingId(newId);
   };
 
   // 텍스트박스 내용 변경
   const handleTextboxChange = (id, value) => {
-    setTextboxes(textboxes.map(tb =>
-      tb.id === id ? { ...tb, content: value } : tb
-    ));
-  };
-
-  // 텍스트박스 드래그 위치 변경
-  const handleTextboxDragStop = (id, x, y) => {
-    setTextboxes(textboxes.map(tb =>
-      tb.id === id ? { ...tb, x, y } : tb
-    ));
-  };
+  setTextboxes(prev =>
+    prev.map(tb => tb.id === id ? { ...tb, content: value } : tb)
+  );
+};
 
   // 텍스트박스 삭제
   const handleTextboxDelete = (id) => {
-    setTextboxes(textboxes.filter(tb => tb.id !== id));
+    setTextboxes(prev => prev.filter(tb => tb.id !== id));
+    if (editingId === id) setEditingId(null);
   };
 
   // 이미지 추가
@@ -64,38 +50,50 @@ function PostCreate() {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
-      setImages(prev =>
-        [
-          ...prev,
-          {
-            id: Date.now(),
-            src: ev.target.result,
-            x: 200,
-            y: 300 + prev.length * 120,
-            z: prev.length + 1,
-            userId,
-          },
-        ]
-      );
+      const newId = `image-${Date.now()}`;
+      setImages(prev => [
+        ...prev,
+        {
+          id: newId,
+          src: ev.target.result,
+          x: 200 + Math.random() * 50,
+          y: 300 + prev.length * 120,
+        },
+      ]);
     };
     reader.readAsDataURL(file);
     e.target.value = "";
   };
 
-
-  // 이미지 드래그 위치 변경
-  const handleImageDragStop = (id, x, y) => {
-    setImages(images.map(img =>
-      img.id === id ? { ...img, x, y } : img
-    ));
-  };
-
   // 이미지 삭제
   const handleImageDelete = (id) => {
-    setImages(images.filter(img => img.id !== id));
+    setImages(prev => prev.filter(img => img.id !== id));
   };
 
-  // 완료(저장) - 순차 처리
+  // 드래그 종료 시 위치 갱신 (dnd-kit)
+  const handleDragEnd = (event) => {
+    const { active, delta } = event;
+    if (!active) return;
+    setTextboxes(prev =>
+      prev.map(tb =>
+        tb.id === active.id
+          ? { ...tb, x: tb.x + (delta?.x || 0), y: tb.y + (delta?.y || 0) }
+          : tb
+      )
+    );
+    setImages(prev =>
+      prev.map(img =>
+        img.id === active.id
+          ? { ...img, x: img.x + (delta?.x || 0), y: img.y + (delta?.y || 0) }
+          : img
+      )
+    );
+  };
+
+  // 바깥 클릭 시 편집 해제
+  const handleBoardClick = () => setEditingId(null);
+
+  // 완료(저장) - DB에 POST 후 이동
   const handleCheck = () => {
     fetch("http://localhost:5000/post", {
       method: "POST",
@@ -105,7 +103,7 @@ function PostCreate() {
       .then(res => res.json())
       .then(postRes => {
         const postId = postRes.id;
-        // 텍스트박스 먼저 저장
+        // 텍스트박스 저장
         return Promise.all(
           textboxes.map(tb =>
             fetch("http://localhost:5000/textbox", {
@@ -120,7 +118,7 @@ function PostCreate() {
             })
           )
         ).then(() =>
-          // 그 다음 이미지 저장
+          // 이미지 저장
           Promise.all(
             images.map(img =>
               fetch("http://localhost:5000/image", {
@@ -147,50 +145,49 @@ function PostCreate() {
       });
   };
 
-  const handleDiscard = () => {
-    if (window.confirm("정말 작성을 취소하고 나가시겠습니까?")) {
-      navigate(-1);
-    }
-  };
-
   return (
-    <div className="relative min-h-screen bg-white p-4 overflow-hidden">
+    <div className="relative min-h-screen bg-white p-4 overflow-hidden select-none">
+      <h2 className="text-gray-400 text-xl mb-2">Create-post</h2>
+      <DndContext onDragEnd={handleDragEnd}>
+        <div
+          className="relative w-full h-[70vh] bg-white rounded-lg shadow"
+          style={{ minHeight: 500 }}
+          onClick={handleBoardClick}
+        >
+          {/* 텍스트박스 */}
+          {textboxes.map(tb => (
+            <DraggableTextbox
+              key={tb.id}
+              id={tb.id}
+              content={tb.content}
+              x={tb.x}
+              y={tb.y}
+              editingId={editingId}
+              setEditingId={setEditingId}
+              onChange={handleTextboxChange}
+              onDelete={handleTextboxDelete}
+            />
+          ))}
+          {/* 이미지 */}
+          {images.map(img => (
+            <DraggableImage
+              key={img.id}
+              id={img.id}
+              src={img.src}
+              x={img.x}
+              y={img.y}
+              onDelete={handleImageDelete}
+            />
+          ))}
+        </div>
+      </DndContext>
       {/* 메뉴바 */}
       <PostMenuBar
         onAddTextbox={handleAddTextbox}
         onAddImage={() => fileInputRef.current.click()}
         onCheck={handleCheck}
         fileInputRef={fileInputRef}
-        onImageFileChange={handleAddImage}
       />
-      {/* 텍스트박스 */}
-      { textboxes.map(tb => (
-        <DraggableTextbox
-          key={tb.id}
-          id={tb.id}
-          content={tb.content}
-          x={tb.x}
-          y={tb.y}
-          editingId={editingId}
-          setEditingId={setEditingId}
-          onChange={handleTextboxChange}
-          onDelete={handleTextboxDelete}
-          onDragStop={handleTextboxDragStop}
-        />
-      ))}
-      {/* 이미지 */}
-      {images.map(img => (
-        <DraggableImage
-          key={img.id}
-          id={img.id}
-          src={img.src}
-          x={img.x}
-          y={img.y}
-          z={img.z}
-          onDelete={handleImageDelete}
-          onDragStop={handleImageDragStop}
-        />
-      ))}
       {/* 이미지 업로드 input */}
       <input
         ref={fileInputRef}
@@ -200,7 +197,7 @@ function PostCreate() {
         onChange={handleAddImage}
       />
       {/* Discard 버튼 */}
-      <DiscardButton onDiscard={handleDiscard} />
+      <DiscardButton onDiscard={() => window.history.back()} />
     </div>
   );
 }
