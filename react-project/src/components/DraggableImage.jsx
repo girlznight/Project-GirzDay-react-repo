@@ -25,7 +25,7 @@ function DraggableImage({ id, src, x, y, onDelete }) {
       >
         <span className="text-lg font-bold text-gray-500">×</span>
       </button>
-      <img src={src} alt="" className="max-w-[120px] rounded cursor-move" draggable={false} />
+      <img src={src} alt="" className="max-w-[120px] rounded cursor-grab" draggable={false} />
     </div>
   );
 }

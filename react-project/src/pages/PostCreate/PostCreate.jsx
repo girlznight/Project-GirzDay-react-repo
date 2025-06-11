@@ -147,10 +147,9 @@ function PostCreate() {
 
   return (
     <div className="relative min-h-screen bg-white p-4 overflow-hidden select-none">
-      <h2 className="text-gray-400 text-xl mb-2">Create-post</h2>
       <DndContext onDragEnd={handleDragEnd}>
         <div
-          className="relative w-full h-[70vh] bg-white rounded-lg shadow"
+          className="relative w-full h-[90vh] bg-white"
           style={{ minHeight: 500 }}
           onClick={handleBoardClick}
         >

@@ -30,7 +30,7 @@ function DraggableTextbox({
 
   return (
     <div ref={setNodeRef} style={style} tabIndex={0} className="group">
-      {/* 드래그 핸들은 항상 DOM에 존재해야 함! */}
+      {/* 드래그 핸들: 텍스트박스 상단 전체에 width: 100%로 적용 */}
       <div
         {...attributes}
         {...listeners}
@@ -38,11 +38,11 @@ function DraggableTextbox({
           position: "absolute",
           left: 0,
           top: 0,
-          width: 24,
-          height: 24,
+          width: "100%",           // 전체 가로 길이만큼
+          height: 20,              // 상단 24px만큼 (원하면 더 키울 수 있음)
           cursor: "grab",
           zIndex: 20,
-          background: "rgba(0,0,0,0.05)",
+          background: "opacity: 0", // 살짝 보이게, 아니면 opacity: 0
         }}
         onMouseDown={e => e.stopPropagation()}
       />
@@ -68,12 +68,13 @@ function DraggableTextbox({
           style={{
             minWidth: 180,
             maxWidth: 400,
+            boxSizing: "border-box", // padding/border 포함
           }}
           autoFocus
         />
       ) : (
         <div
-          className="px-4 py-2 bg-transparent text-black"
+          className="px-4 py-2 bg-transparent text-black "
           style={{
             minWidth: 180,
             maxWidth: 400,
