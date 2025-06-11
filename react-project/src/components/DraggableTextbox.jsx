@@ -22,8 +22,9 @@ function DraggableTextbox({
     left: transform ? x + transform.x : x,
     top: transform ? y + transform.y : y,
     zIndex: 1,
-    minWidth: 220,
-    maxWidth: 400,
+    width: 320, // 고정 width (px)
+    minWidth: 320,
+    maxWidth: 320,
   };
 
   return (
@@ -40,16 +41,16 @@ function DraggableTextbox({
         style={{
           position: "absolute",
           left: 0,
-          top: 0,
+          top: 5,
           width: "100%",
-          height: 15,
+          height: 18,
           cursor: "grab",
           zIndex: 5,
-          background: "rgba(0,0,0,0.0)",
+          background: "rgba(0,0,0,0)",
         }}
         onMouseDown={e => e.stopPropagation()}
       />
-      {/* 삭제 버튼: 항상 좌상단에 노출 */}
+      {/* 삭제 버튼 */}
       <button
         onClick={e => {
           e.stopPropagation();
@@ -64,8 +65,9 @@ function DraggableTextbox({
       </button>
       {/* 사진 프레임 스타일 텍스트박스 */}
       <div
-        className={`px-8 py-6 min-w-[220px] max-w-[400px] min-h-[60px] flex items-center justify-center transition-colors duration-150
-          ${editing ? "border border-red-300 bg-white" : "border border-transparent bg-white"}
+        className={`px-8 py-6 min-h-[60px] flex items-center justify-center transition-colors duration-150
+          ${editing ? "border border-red-300 bg-transparent" : "border border-transparent bg-transparent"}
+          w-full
         `}
         style={{
           fontFamily: "inherit",
@@ -75,20 +77,21 @@ function DraggableTextbox({
         {editing ? (
           <textarea
             ref={textareaRef}
-            className="w-full bg-white text-black outline-none resize-none overflow-hidden text-center text-lg"
+            className="w-full bg-transparent text-black outline-none resize-none overflow-hidden text-center text-lg"
             value={content}
             maxLength={500}
             onChange={e => onChange(id, e.target.value)}
             onBlur={() => setEditingId(null)}
             rows={1}
             style={{
-              minWidth: 180,
-              maxWidth: 400,
               boxSizing: "border-box",
               border: "none",
               padding: 0,
               background: "transparent",
               fontFamily: "inherit",
+              width: "100%",
+              minWidth: "100%",
+              maxWidth: "100%",
             }}
             autoFocus
           />
@@ -96,11 +99,12 @@ function DraggableTextbox({
           <div
             className="w-full text-black text-center text-lg"
             style={{
-              minWidth: 180,
-              maxWidth: 400,
               whiteSpace: "pre-wrap",
               wordBreak: "break-all",
               fontFamily: "inherit",
+              width: "100%",
+              minWidth: "100%",
+              maxWidth: "100%",
             }}
           >
             {content}
