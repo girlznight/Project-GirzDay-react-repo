@@ -56,42 +56,65 @@ function Post() {
 
       {/* 보드 영역 */}
       <div
-        className="relative w-full h-[70vh] bg-white rounded-lg shadow"
+        className="relative w-full h-[70vh] bg-white "
         style={{ minHeight: 500 }}
       >
         {/* 텍스트박스 렌더링 */}
         {textboxes.map(tb => (
           <div
             key={tb.id}
-            className="absolute px-4 py-2 bg-transparent text-black"
+            className="absolute px-8 py-6 flex items-center justify-center rounded"
             style={{
               left: tb.x,
               top: tb.y,
-              minWidth: 180,
-              maxWidth: 400,
-              whiteSpace: "pre-wrap",
-              wordBreak: "break-all",
-              zIndex: 1,
+              width: 320, // PostCreate에서 썼던 고정 width
+              minHeight: 60,
+              zIndex: tb.zIndex || 1,
+              fontFamily: "inherit",
             }}
           >
-            {tb.content}
+            <div
+              className="w-full text-black text-center text-lg"
+              style={{
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-all",
+                fontFamily: "inherit",
+              }}
+            >
+              {tb.content}
+            </div>
           </div>
         ))}
 
         {/* 이미지 렌더링 */}
-        {images.map(img => (
-          <img
+        {images.map((img, idx) => (
+          <div
             key={img.id}
-            src={img.src}
-            alt=""
-            className="absolute max-w-[120px] rounded"
+            className="absolute"
             style={{
               left: img.x,
               top: img.y,
-              zIndex: 1,
+              width: img.width || 250,
+              height: img.height || 250,
+              zIndex: img.zIndex || idx + 10, // 이미지가 텍스트박스 위에 오도록 10부터 시작
+              minWidth: 40,
+              minHeight: 40,
             }}
-            draggable={false}
-          />
+          >
+            <img
+              src={img.src}
+              alt=""
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+                borderRadius: 8,
+                userSelect: "none",
+                pointerEvents: "none",
+              }}
+              draggable={false}
+            />
+          </div>
         ))}
       </div>
     </div>
