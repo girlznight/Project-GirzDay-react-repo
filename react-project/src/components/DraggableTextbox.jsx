@@ -56,7 +56,7 @@ function DraggableTextbox({
           e.stopPropagation();
           onDelete(id);
         }}
-        className="absolute -top-4 -left-3 w-7 h-7 bg-white border border-gray-300 rounded-full flex items-center justify-center shadow hover:bg-red-100 z-20"
+        className="absolute -top-3 -left-3 bg-white border border-gray-300 rounded-full w-6 h-6 flex items-center justify-center shadow hover:bg-gray-100 z-30"
         aria-label="삭제"
         type="button"
         style={{ cursor: "pointer" }}
@@ -66,7 +66,7 @@ function DraggableTextbox({
       {/* 사진 프레임 스타일 텍스트박스 */}
       <div
         className={`px-8 py-6 min-h-[60px] flex items-center justify-center transition-colors duration-150
-          ${editing ? "border border-red-300 bg-transparent" : "border border-transparent bg-transparent"}
+          ${editing ? "border border-gray-300 bg-transparent" : "border border-transparent bg-transparent"}
           w-full
         `}
         style={{

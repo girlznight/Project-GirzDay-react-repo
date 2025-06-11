@@ -145,10 +145,10 @@ function PostCreate() {
   };
 
   return (
-    <div className="relative min-h-screen bg-white p-4 overflow-hidden select-none">
+    <div className="relative min-h-screen bg-[#fcfcf8] p-4 overflow-hidden select-none">
       <DndContext onDragEnd={handleDragEnd}>
         <div
-          className="relative w-full h-[90vh] bg-white"
+          className="relative w-full h-[90vh]"
           style={{ minHeight: 500 }}
           onClick={handleBoardClick}
         >

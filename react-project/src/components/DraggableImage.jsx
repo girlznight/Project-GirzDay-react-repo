@@ -31,7 +31,7 @@ function DraggableImage({ id, src, x, y, onDelete, zIndex }) {
       <div
         {...listeners}
         {...attributes}
-        className="absolute left-0 top-5 w-full h-28 bg-gray-100 opacity-50 cursor-grab z-20"
+        className="absolute left-0 top-5 w-full h-28 bg-transparent cursor-grab z-20"
         style={{
           borderRadius: "0 0 8px 8px",
           textAlign: "center",
@@ -41,7 +41,6 @@ function DraggableImage({ id, src, x, y, onDelete, zIndex }) {
         title="여기를 잡고 드래그"
         onMouseDown={e => e.stopPropagation()}
       >
-        <span className="text-gray-500">드래그</span>
       </div>
     </div>
   );
