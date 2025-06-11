@@ -30,7 +30,8 @@ function Post() {
   if (!post) return <div>Loading...</div>;
 
   return (
-    <div className="relative min-h-screen bg-white">
+    <div className="relative min-h-screen bg-white p-4 overflow-hidden">
+
       {/* 토글 버튼: 사이드바가 닫혀있을 때만 보이게 */}
       {!sidebarOpen && (
         <SidebarToggleButton onClick={() => setSidebarOpen(true)} />
@@ -51,24 +52,23 @@ function Post() {
 
       {/* 텍스트박스 렌더 */}
       {textboxes.map(tb => (
-        <div
-          key={tb.id}
-          className="absolute bg-yellow-50 border rounded-lg p-2"
-          style={{ left: tb.x, top: tb.y, width: 200, minHeight: 40 }}
-        >
-          {tb.content}
-        </div>
-      ))}
-      {/* 이미지 렌더 */}
-      {images.map(img => (
-        <img
-          key={img.id}
-          src={img.src}
-          alt="post"
-          className="absolute rounded-lg border"
-          style={{ left: img.x, top: img.y, width: 120, height: 120, zIndex: img.z || 1 }}
-        />
-      ))}
+      <div
+        key={tb.id}
+        className="absolute"
+        style={{ left: tb.x, top: tb.y, width: 200, minHeight: 40 }}
+      >
+        {tb.content}
+      </div>
+    ))}
+    {images.map(img => (
+      <img
+        key={img.id}
+        src={img.src}
+        alt="post"
+        className="absolute"
+        style={{ left: img.x, top: img.y, width: 120, height: 120, zIndex: img.z || 1 }}
+      />
+    ))}
     </div>
   );
 }
