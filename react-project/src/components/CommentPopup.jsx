@@ -1,3 +1,4 @@
+/* 전부 챗지피티 */
 import AlertPopup from "./AlertPopup";
 import NoteBg from "../assets/sticky-note.png";
 
