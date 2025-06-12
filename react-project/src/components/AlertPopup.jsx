@@ -10,16 +10,16 @@ function AlertPopup({ show, onYes, onNo, message }) {
         <p className="mb-6 text-lg font-medium">{message}</p>
         <div className="flex justify-center space-x-4">
           <CustomButton
-            onClick={onNo}
-            className="w-24 h-10 bg-black text-white"
-          >
-            No
-          </CustomButton>
-          <CustomButton
             onClick={onYes}
             className="w-24 h-10 border border-black text-black bg-transparent"
           >
             Yes
+          </CustomButton>
+          <CustomButton
+            onClick={onNo}
+            className="w-24 h-10 bg-black text-white"
+          >
+            No
           </CustomButton>
         </div>
       </div>
