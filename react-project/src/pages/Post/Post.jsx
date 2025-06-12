@@ -1,12 +1,14 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams }      from "react-router-dom";
 
-import Sidebar            from "../../components/SideBar";
-import SidebarToggleBtn   from "../../components/SidebarToggleButton";
-import AlertPopup         from "../../components/AlertPopup";
-import CommentPopup       from "../../components/CommentPopup";
+import Sidebar          from "../../components/SideBar";
+import SidebarToggleBtn from "../../components/SidebarToggleButton";
+import AlertPopup       from "../../components/AlertPopup";
+import CommentPopup     from "../../components/CommentPopup";
 
-/* assets */
+import { DndContext }   from "@dnd-kit/core";
+import Drag             from "../../components/Drag";
+
 import CommentIcon  from "../../assets/post_comment.svg";
 import ShareIcon    from "../../assets/post_share.svg";
 import EditIcon     from "../../assets/sidebar_pencil.svg";
@@ -14,169 +16,202 @@ import DeleteIcon   from "../../assets/discardbutton_trash.svg";
 import NoteBg       from "../../assets/sticky-note.png";
 
 export default function Post() {
-  const { id }  = useParams();
-  const nav     = useNavigate();
-  const isOwner = id === "me";                 // 테스트용: 내 글 모드
+  const { id }   = useParams();
+  const nav      = useNavigate();
+  const myId     = Number(localStorage.getItem("userId") || 0);
 
-  /* ---------- state ---------- */
-  const [showSide, setSide] = useState(false);
-  const [notes,    setNotes]= useState([]);
-  const [photos,   setPhotos]= useState([]);
-  const [copied,   setCopy] = useState(false);
+  const [showSide , setShowSide] = useState(false);
+  const [notes    , setNotes]    = useState([]);
+  const [images   , setImages]   = useState([]);
+  const [copied   , setCopied]   = useState(false);
+  const [openCmt  , setOpenCmt]  = useState(false);
+  const [cText    , setCText]    = useState("");
 
-  const [cOpen, setCOpen] = useState(false);   // 댓글 팝업
-  const [cText, setCText] = useState("");
+  const sideRef = useRef(null);
 
-  const toggleComment = () => setCOpen(p => !p);
+  const isOwner = notes.some(tb => Number(tb.userId) === myId);
 
-  const sideRef  = useRef(null);
-  const localUid = Number(localStorage.getItem("userId") || 0);
+  useEffect(() => {
+    function handleOut(e) {
+      if (sideRef.current && !sideRef.current.contains(e.target)) {
+        setShowSide(false);
+      }
+    }
+    document.addEventListener("mousedown", handleOut);
+    return () => document.removeEventListener("mousedown", handleOut);
+  }, []);
 
-  /* ── 사이드바 외 클릭 닫기 ── */
-  useEffect(()=>{
-    const fn=e=>{
-      if(sideRef.current && !sideRef.current.contains(e.target)) setSide(false);
-    };
-    document.addEventListener("mousedown",fn);
-    return ()=>document.removeEventListener("mousedown",fn);
-  },[]);
-
-  /* ── DB 로드 ── */
-  useEffect(()=>{
+  useEffect(() => {
     fetch(`http://localhost:5000/textbox?postId=${id}`)
-      .then(r=>r.json()).then(setNotes);
+      .then(r => r.json()).then(setNotes);
+
     fetch(`http://localhost:5000/image?postId=${id}`)
-      .then(r=>r.json()).then(setPhotos);
-  },[id]);
+      .then(r => r.json()).then(setImages);
+  }, [id]);
 
-  /* ── 공유 ── */
-  const share = () => {
+  function share() {
     navigator.clipboard.writeText(window.location.href);
-    setCopy(true);
-    setTimeout(()=>setCopy(false),2000);
-  };
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
 
-  /* ── 수정·삭제 (내 글) ── */
-  const goEdit = () => nav(`/post/edit/${id}`);
-  const delPost = async () => {
-    if(!window.confirm("삭제할까요?")) return;
-    await fetch(`http://localhost:5000/post/${id}`,{method:"DELETE"});
-    const latest=await fetch("http://localhost:5000/post?_sort=createdAt&_order=desc")
-                  .then(r=>r.json());
-    nav(`/post/${latest[0]?.id || "1"}`);
-  };
+  function goEdit()  { nav(`/post/edit/${id}`); }
+  function handleLogout() {
+    if (window.confirm("로그아웃할까요?")) {
+      localStorage.removeItem("userId");
+      nav("/login");
+    }
+  }
 
-  /* ── 포스트잇 드래그 저장 ── */
-  const dragEnd = (e,t) => {
-    if(!isOwner || t.userId!==localUid) return;
-    const up={...t,x:e.pageX-160,y:e.pageY-80};
-    fetch(`http://localhost:5000/textbox/${t.id}`,{
-      method:"PUT",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify(up)
-    });
-    setNotes(n=>n.map(x=>x.id===t.id?up:x));
-  };
+  async function delPost() {
+    const ok = window.confirm("삭제할까요?");
+    if (!ok) return;
+    await fetch(`http://localhost:5000/post/${id}`, { method:"DELETE" });
+    nav("/");
+  }
 
-  /* ── 댓글 저장 ── */
-  const writeCmt = () => {
-    if(!cText.trim()) return;
-    const newTb={
-      id:crypto.randomUUID(),
-      postId:id, userId:localUid,
-      content:cText, imgSrc:NoteBg,
-      x:120, y:120, zIndex:60
+  function handleDragEnd(event) {
+    const { active, delta } = event;
+    if (!delta) return;
+
+    setNotes(prev => prev.map(tb => {
+      if (tb.id !== active.id) return tb;
+      if (!(isOwner && tb.userId === myId)) return tb;
+
+      const updated = {
+        ...tb,
+        x: tb.x + delta.x,
+        y: tb.y + delta.y,
+      };
+
+      fetch(`http://localhost:5000/textbox/${tb.id}`, {
+        method :"PUT",
+        headers: { "Content-Type":"application/json" },
+        body   : JSON.stringify(updated),
+      });
+
+      return updated;
+    }));
+  }
+
+
+  function saveComment() {
+    if (!cText.trim()) return;
+
+    const newTb = {
+      id: crypto.randomUUID(),
+      postId: id,
+      userId: myId,
+      content: cText,
+      imgSrc: NoteBg,
+      x: 120, y: 120, zIndex: 60,
     };
-    fetch("http://localhost:5000/textbox",{
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify(newTb)
-    });
-    setNotes(n=>[...n,newTb]);
-    setCText(""); setCOpen(false);
-  };
 
-  /* ---------- JSX ---------- */
+    fetch("http://localhost:5000/textbox", {
+      method :"POST",
+      headers: { "Content-Type":"application/json" },
+      body   : JSON.stringify(newTb),
+    }).then(() => setNotes(prev => [...prev, newTb]));
+
+    setOpenCmt(false);
+    setCText("");
+  }
+
+ 
   return (
-    <div className="relative min-h-screen bg-[#fcfcf8] p-4 overflow-hidden">
+    <div className="relative min-h-screen bg-[#fcfcf8] p-4">
 
-      {/* 댓글 팝업 오버레이 */}
-      {cOpen && <div className="fixed inset-0 bg-[#fcfcf8]/60 z-40" />}
+      {/* 로그아웃 */}
+      <button
+        onClick={handleLogout}
+        className="fixed top-6 right-8 z-50 text-sm text-blue-600"
+      >Logout</button>
 
-      {/* 로그아웃 (예시) */}
-      <a href="/logout" className="fixed top-6 right-8 z-50 text-sm text-blue-600">
-        Logout
-      </a>
+      {/* 사이드바 */}
+      {!showSide && <SidebarToggleBtn onClick={() => setShowSide(true)} />}
+      {showSide && (
+        <div ref={sideRef}><Sidebar onClose={() => setShowSide(false)} /></div>
+      )}
 
-      {/* 사이드바 토글 */}
-      {!showSide && <SidebarToggleBtn onClick={()=>setSide(true)} />}
-      {showSide && <div ref={sideRef}><Sidebar/></div>}
+      {/* 게시글 보드  */}
+      <div className="relative w-full h-[70vh] min-h-[500px]">
+        <DndContext onDragEnd={handleDragEnd}>
 
-      {/* 게시글 보드 */}
-      <div className="relative w-full h-[70vh]" style={{minHeight:500}}>
-        {notes.map((n,i)=>(
-          <div key={n.id}
-            draggable={isOwner && n.userId===localUid}
-            onDragEnd={e=>dragEnd(e,n)}
-            className="absolute px-6 py-4 select-none"
+          {/* 텍스트 포스트잇 */}
+          {notes.map((tb, idx) => (
+            <Drag key={tb.id} id={tb.id} position={{ x: tb.x, y: tb.y }}>
+              <div
+                style={{
+                  width:320, height:320,
+                  background:`url(${tb.imgSrc || NoteBg}) center/cover`,
+                  zIndex: tb.zIndex || idx + 1,
+                  cursor: isOwner && tb.userId === myId ? "grab" : "default",
+                }}
+                className="px-6 py-4 select-none whitespace-pre-wrap break-words"
+              >
+                {tb.content}
+              </div>
+            </Drag>
+          ))}
+
+        </DndContext>
+
+        {/* 일반 이미지 */}
+        {images.map((img, idx) => (
+          <img
+            key={img.id}
+            src={img.src}
+            alt=""
+            className="absolute object-contain pointer-events-none select-none"
             style={{
-              left:n.x, top:n.y,
-              width:320, height:320,
-              zIndex:n.zIndex||i+1,
-              background:`url(${n.imgSrc||NoteBg}) center/cover no-repeat`,
-              cursor:(isOwner && n.userId===localUid)?"move":"default",
-              whiteSpace:"pre-wrap", wordBreak:"break-word", color:"#000"
-            }}>
-            {n.content}
-          </div>
-        ))}
-        {photos.filter(p=>p.src && p.src.trim()!=="").map((p,i)=>(
-          <img key={p.id} src={p.src} alt=""
-               className="absolute object-contain pointer-events-none select-none"
-               style={{
-                 left:p.x, top:p.y,
-                 width:p.width||250, height:p.height||250,
-                 zIndex:p.zIndex||i+50
-               }}/>
+              left:img.x, top:img.y,
+              width:img.width||200, height:img.height||200,
+              zIndex:img.zIndex||idx+50
+            }}
+          />
         ))}
       </div>
 
-      {/* 하단 아이콘 ─ Comment → Share → (Edit·Delete) */}
+      {/* 우하단 아이콘 */}
       <div className="fixed bottom-6 right-6 z-50 flex gap-6">
-        <button onClick={toggleComment}>
-          <img src={CommentIcon} className="w-8 h-8" alt="comment"/>
+        <button onClick={() => setOpenCmt(true)}>
+          <img src={CommentIcon} alt="comment" className="w-8 h-8" />
         </button>
 
-        <button onClick={share} style={{visibility:cOpen?"hidden":"visible"}}>
-          <img src={ShareIcon} className="w-8 h-8" alt="share"/>
-        </button>
-
-        {isOwner && (
+        {!openCmt && (
           <>
-            <button onClick={goEdit}>
-              <img src={EditIcon} className="w-8 h-8" alt="edit"/>
+            <button onClick={share}>
+              <img src={ShareIcon} alt="share" className="w-8 h-8" />
             </button>
-            <button onClick={delPost}>
-              <img src={DeleteIcon} className="w-8 h-8" alt="delete"/>
-            </button>
+
+            {isOwner && (
+              <>
+                <button onClick={goEdit}>
+                  <img src={EditIcon} alt="edit" className="w-8 h-8" />
+                </button>
+                <button onClick={delPost}>
+                  <img src={DeleteIcon} alt="delete" className="w-8 h-8" />
+                </button>
+              </>
+            )}
           </>
         )}
       </div>
 
-      {/* 공유 알림 */}
+      {/* 링크 복사 알림 */}
       {copied && (
-        <AlertPopup onClose={()=>setCopy(false)}>
-          <div className="px-6 py-4 text-sm">링크가 복사되었습니다!</div>
+        <AlertPopup onClose={() => setCopied(false)}>
+          <div className="px-6 py-4">링크가 복사되었습니다!</div>
         </AlertPopup>
       )}
 
       {/* 댓글 팝업 */}
       <CommentPopup
-        open={cOpen}
-        onClose={()=>setCOpen(false)}
+        open={openCmt}
+        onClose={() => setOpenCmt(false)}
         value={cText}
         onChange={setCText}
-        onSave={writeCmt}
+        onSave={saveComment}
       />
     </div>
   );
