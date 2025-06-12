@@ -14,7 +14,7 @@ import NoteBg       from "../../assets/sticky-note.png";   // 포스트잇 배�
 
 export default function Post() {
   /* ── 라우팅 & 모드 ─────────────────────── */
-  const { id }  = useParams();             // "me" = 내 글
+  const { id }  = useParams();             // "me" = 내 글 / 테스트용
   const nav     = useNavigate();
   const isOwner = id === "me";
 
