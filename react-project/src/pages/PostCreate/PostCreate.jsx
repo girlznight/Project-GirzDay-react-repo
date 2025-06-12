@@ -5,6 +5,7 @@ import PostMenuBar from "../../components/PostMenuBar";
 import DiscardButton from "../../components/DiscardButton";
 import DraggableTextbox from "../../components/DraggableTextbox";
 import DraggableImage from "../../components/DraggableImage";
+import AlertPopup from "../../components/AlertPopup";
 
 function PostCreate() {
   const fileInputRef = useRef();
@@ -14,6 +15,7 @@ function PostCreate() {
   const [textboxes, setTextboxes] = useState([]);
   const [images, setImages] = useState([]);
   const [editingId, setEditingId] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
 
   // 텍스트박스 추가
   const handleAddTextbox = () => {
@@ -94,6 +96,15 @@ function PostCreate() {
 
   // 바깥 클릭 시 편집 해제
   const handleBoardClick = () => setEditingId(null);
+
+  const onDiscard = () => setShowAlert(true);
+
+  const handleAlertYes = () => {
+    setShowAlert(false);
+    window.history.back();
+  };
+
+  const handleAlertNo = () => setShowAlert(false);
 
   // 완료(저장) - DB에 POST 후 이동
   const handleCheck = () => {
@@ -202,7 +213,16 @@ function PostCreate() {
         onChange={handleAddImage}
       />
       {/* Discard 버튼 */}
-      <DiscardButton onDiscard={() => window.history.back()} />
+      <DiscardButton onClick={onDiscard} />
+
+      {showAlert && (
+        <AlertPopup
+          show={showAlert}
+          message="작성 중인 내용이 사라집니다. 정말로 나가시겠습니까?"
+          onYes={handleAlertYes}
+          onNo={handleAlertNo}
+        />
+      )}
     </div>
   );
 }
