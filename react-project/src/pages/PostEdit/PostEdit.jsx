@@ -17,7 +17,7 @@ function PostEdit() {
   const [images, setImages] = useState([]);
   const [originalImages, setOriginalImages] = useState([]);
 
-  // 삭제한 텍스트박스/이미지 ID
+  // 삭제한 텍스트박스/이미지 ID 목록
   const [deletedTextboxIds, setDeletedTextboxIds] = useState([]);
   const [deletedImageIds, setDeletedImageIds] = useState([]);
 
@@ -33,7 +33,7 @@ function PostEdit() {
         setOriginalTextboxes(data);
         setDeletedTextboxIds([]); 
       })
-      .catch((err) => console.error("텍스트박스 로드 실패", err));
+      .catch((error) => console.error("텍스트박스 로드 실패", error));
 
     fetch(`http://localhost:5000/image?postId=${postIdStr}`)
       .then((res) => res.json())
@@ -42,7 +42,7 @@ function PostEdit() {
         setOriginalImages(data);
         setDeletedImageIds([]);
       })
-      .catch((err) => console.error("이미지 로드 실패", err));
+      .catch((error) => console.error("이미지 로드 실패", error));
   }, [id]);
 
   const cutPrefix = (id) => (id.includes("-") ? id.split("-")[1] : id);
@@ -98,7 +98,7 @@ function PostEdit() {
       setDeletedImageIds((prev) => [...prev, cleanId]);
     }
 
-    // 화면에서만 제거
+    // 화면에서만 삭제
     setImages((prev) => prev.filter((img) => img.id !== id));
   };
 
@@ -154,7 +154,7 @@ function PostEdit() {
       ...prev,
       {
         id: newId,
-        content: "수정 텍스트",
+        content: "dummy text",
         x: 100 + prev.length * 30,
         y: 100 + prev.length * 30,
         postId: String(id),
@@ -228,8 +228,7 @@ function PostEdit() {
 
       alert("저장 완료!");
       navigate(`/post/${id}`);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
       alert("에러가 발생했습니다.");
     }
   };
@@ -278,7 +277,7 @@ function PostEdit() {
               src={img.src}
               x={img.x}
               y={img.y}
-              onDelete={handleImageDelete} // 여기 함수가 정확히 전달되는지 확인
+              onDelete={handleImageDelete}
             />
           ))}
         </div>
