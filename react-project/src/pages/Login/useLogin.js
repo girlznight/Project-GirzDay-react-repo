@@ -25,6 +25,20 @@ export default function useLogin() {
         navigate("/login");                         //로그인 페이지로 이동시킴 -> 로그아웃 후 사용자가 다시 로그인할 수 있도록 보내주는거    
     };
 
+    // 유저가 이미 로그인 상태일 경우, 로그인 페이지 접근 시 자동 리다이렉트 시켜주는 함수
+    const redirectIfLoggedIn = async () => {
+        const storedId = getStoredUserId();                         //로컬 스토리지에서 저장된 userId 가져오기
+        if (!storedId) return;                                      //userId가 없으면 = 로그인 안되어있으면 함수종료 
+
+    const recentPost = await getRecentPostByUserId(storedId);       //해당 유저의 최근 글 가져오기 (없으면 null)
+        if (recentPost) {
+            navigate(`/post/${recentPost.id}`, { replace: true });  //최근 글이 있으면 해당 페이지로 이동
+        } else {
+            navigate("/post/create", { replace: true });            //최근 글이 없다면 새 글 작성 페이지로 이동 
+        }
+    };
+
+
 
 
     //로그인 처리 
@@ -54,26 +68,20 @@ export default function useLogin() {
         } catch (err) {
             setError("로그인 중 오류 발생")         //예기치 못한 에러가 생기면 에러 표시
         }
-    
-       
     };
-    // 로컬에 저장되어있는 아이디를 꺼내는 함수를 만들기. 그것도 리턴에 넣으면 다른 컴포넌트에서 쓰면 됨 
-    // 팀원들한테 꼭 이 함수 써서 로그인 확인하라고 하기.
-    
-    // 로그아웃 (로컬스토리지 지우고 로그인페이지)
-
 
     //아래에서는 Login.jsx에서 쓸 수 있게 상태랑 함수를 내보냅니다
 
     return{
-        loginId,      //현재 입력된 Id
-        password,     //현재 입력된 비번
-        setLoginId,   //id변경
-        setPassword,  //비번 변경
-        error,        //에러 
-        handleLogin,  //로그인 실행 
-        getStoredUserId, // 로그인된 유저 Id 가져오기 (로컬스토리지에서)
-        logout,        // 로그아웃 실행 (로컬스토리지 제거, 로그인 페이지 이동)
+        loginId,             //현재 입력된 Id
+        password,            //현재 입력된 비번
+        setLoginId,          //id변경
+        setPassword,         //비번 변경
+        error,               //에러 
+        handleLogin,         //로그인 실행 
+        getStoredUserId,     // 로그인된 유저 Id 가져오기 (로컬스토리지에서)
+        logout,              // 로그아웃 실행 (로컬스토리지 제거, 로그인 페이지 이동)
+        redirectIfLoggedIn,  //로그인된 유저가 로그인 페이지에 접근했을 때 강제로 게시글 화면으로 튕겨냄
     };
 
 }
