@@ -11,27 +11,41 @@ function PostEdit() {
   const navigate = useNavigate();
   const fileInputRef = useRef();
   const userId = Number(localStorage.getItem("userId"));
+
   const [textboxes, setTextboxes] = useState([]);
+  const [originalTextboxes, setOriginalTextboxes] = useState([]);
   const [images, setImages] = useState([]);
+  const [originalImages, setOriginalImages] = useState([]);
+
+  // 삭제한 텍스트박스/이미지 ID
+  const [deletedTextboxIds, setDeletedTextboxIds] = useState([]);
+  const [deletedImageIds, setDeletedImageIds] = useState([]);
+
   const [editingId, setEditingId] = useState(null);
 
-  // 기존 데이터 불러오기
   useEffect(() => {
     const postIdStr = String(id);
 
     fetch(`http://localhost:5000/textbox?postId=${postIdStr}`)
       .then((res) => res.json())
-      .then(setTextboxes)
+      .then((data) => {
+        setTextboxes(data);
+        setOriginalTextboxes(data);
+        setDeletedTextboxIds([]); 
+      })
       .catch((err) => console.error("텍스트박스 로드 실패", err));
 
     fetch(`http://localhost:5000/image?postId=${postIdStr}`)
       .then((res) => res.json())
-      .then(setImages)
+      .then((data) => {
+        setImages(data);
+        setOriginalImages(data);
+        setDeletedImageIds([]);
+      })
       .catch((err) => console.error("이미지 로드 실패", err));
   }, [id]);
 
-  // 함수명 stripPrefix -> cutPrefix 로 변경
-  const cutPrefix = (id) => (id.includes(".") ? id.split(".")[1] : id);
+  const cutPrefix = (id) => (id.includes("-") ? id.split("-")[1] : id);
 
   // 텍스트박스 내용 변경
   const handleTextboxChange = (id, value) => {
@@ -40,39 +54,58 @@ function PostEdit() {
     );
   };
 
+  // 텍스트박스 수정 취소
+  const handleTextboxCancel = (id) => {
+    const original = originalTextboxes.find(
+      (tb) => cutPrefix(tb.id) === cutPrefix(id)
+    );
+    if (!original) {
+      // 새로 추가한 텍스트박스면 삭제
+      setTextboxes((prev) => prev.filter((tb) => tb.id !== id));
+    } else {
+      // 기존 텍스트박스면 원본 내용으로 복원
+      setTextboxes((prev) =>
+        prev.map((tb) => (cutPrefix(tb.id) === cutPrefix(id) ? original : tb))
+      );
+    }
+    setEditingId(null);
+  };
+
   // 텍스트박스 삭제
   const handleTextboxDelete = (id) => {
-    fetch(`http://localhost:5000/textbox/${cutPrefix(id)}`, {
-      method: "DELETE",
-    })
-      .then(() => {
-        setTextboxes((prev) => prev.filter((tb) => tb.id !== id));
-        if (editingId === id) setEditingId(null);
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("오류가 발생했습니다.");
-      });
+    const isOriginal = originalTextboxes.some(
+      (tb) => cutPrefix(tb.id) === cutPrefix(id)
+    );
+
+    if (isOriginal) {
+      // 기존에 서버에 있던 텍스트박스 삭제 ID에 추가
+      setDeletedTextboxIds((prev) => [...prev, cutPrefix(id)]);
+    }
+    // 화면에서 삭제 처리
+    setTextboxes((prev) => prev.filter((tb) => tb.id !== id));
+
+    if (editingId === id) setEditingId(null);
   };
 
-  // 이미지 삭제
   const handleImageDelete = (id) => {
-    fetch(`http://localhost:5000/image/${cutPrefix(id)}`, {
-      method: "DELETE",
-    })
-      .then(() => {
-        setImages((prev) => prev.filter((img) => img.id !== id));
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("오류가 발생했습니다.");
-      });
+    const cleanId = cutPrefix(id);
+    const isOriginal = originalImages.some(
+      (img) => cutPrefix(img.id) === cleanId
+    );
+
+    if (isOriginal) {
+      // 서버에 존재하던 이미지면 삭제 예약
+      setDeletedImageIds((prev) => [...prev, cleanId]);
+    }
+
+    // 화면에서만 제거
+    setImages((prev) => prev.filter((img) => img.id !== id));
   };
 
-  // 이미지 추가
   const handleAddImage = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
     const reader = new FileReader();
     reader.onload = (ev) => {
       const newId = `image-${Date.now()}`;
@@ -93,7 +126,6 @@ function PostEdit() {
     e.target.value = "";
   };
 
-  // 드래그 종료 시 위치 갱신 (dnd-kit)
   const handleDragEnd = (event) => {
     const { active, delta } = event;
     if (!active) return;
@@ -114,10 +146,8 @@ function PostEdit() {
     );
   };
 
-  // 바깥 클릭 시 편집 해제
   const handleBoardClick = () => setEditingId(null);
 
-  // 새 텍스트박스 추가
   const handleAddTextbox = () => {
     const newId = `textbox-${Date.now()}`;
     setTextboxes((prev) => [
@@ -128,14 +158,16 @@ function PostEdit() {
         x: 100 + prev.length * 30,
         y: 100 + prev.length * 30,
         postId: String(id),
+        isNew: true,
       },
     ]);
     setEditingId(newId);
   };
 
-  // 저장 
+  // 저장: 수정, 추가, 삭제 요청 전송
   const handleSave = async () => {
     try {
+      // 텍스트박스 수정 저장
       await Promise.all(
         textboxes.map((tb) => {
           const isServerData = !tb.id.startsWith("textbox-");
@@ -157,6 +189,7 @@ function PostEdit() {
         })
       );
 
+      // 이미지 수정 저장
       await Promise.all(
         images.map((img) => {
           const isNew = img.isNew;
@@ -179,12 +212,39 @@ function PostEdit() {
         })
       );
 
+      // 텍스트 박스 삭제
+      await Promise.all(
+        deletedTextboxIds.map((tbId) =>
+          fetch(`http://localhost:5000/textbox/${tbId}`, { method: "DELETE" })
+        )
+      );
+
+      // 이미지 삭제
+      await Promise.all(
+        deletedImageIds.map((imgId) =>
+          fetch(`http://localhost:5000/image/${imgId}`, { method: "DELETE" })
+        )
+      );
+
       alert("저장 완료!");
       navigate(`/post/${id}`);
     } catch (err) {
       console.error(err);
       alert("에러가 발생했습니다.");
     }
+  };
+
+  const handleDiscard = () => {
+    const confirm = window.confirm(
+      "변경 내용이 사라집니다. 정말 나가시겠어요?"
+    );
+    if (!confirm) return;
+    setTextboxes(originalTextboxes);
+    setImages(originalImages);
+    setDeletedTextboxIds([]);
+    setDeletedImageIds([]);
+    setEditingId(null);
+    window.history.back();
   };
 
   return (
@@ -207,9 +267,9 @@ function PostEdit() {
               setEditingId={setEditingId}
               onChange={handleTextboxChange}
               onDelete={handleTextboxDelete}
+              onCancel={handleTextboxCancel}
             />
           ))}
-
           {/* 이미지 */}
           {images.map((img) => (
             <DraggableImage
@@ -218,12 +278,11 @@ function PostEdit() {
               src={img.src}
               x={img.x}
               y={img.y}
-              onDelete={handleImageDelete}
+              onDelete={handleImageDelete} // 여기 함수가 정확히 전달되는지 확인
             />
           ))}
         </div>
       </DndContext>
-
       {/* 메뉴바 */}
       <PostMenuBar
         onAddTextbox={handleAddTextbox}
@@ -231,7 +290,6 @@ function PostEdit() {
         onCheck={handleSave}
         fileInputRef={fileInputRef}
       />
-
       {/* 이미지 업로드 input */}
       <input
         ref={fileInputRef}
@@ -240,9 +298,8 @@ function PostEdit() {
         style={{ display: "none" }}
         onChange={handleAddImage}
       />
-
       {/* Discard 버튼 */}
-      <DiscardButton onDiscard={() => window.history.back()} />
+      <DiscardButton onDiscard={handleDiscard} />
     </div>
   );
 }
