@@ -5,7 +5,8 @@ import PostMenuBar from "../../components/PostMenuBar";
 import DiscardButton from "../../components/DiscardButton";
 import DraggableTextbox from "../../components/DraggableTextbox";
 import DraggableImage from "../../components/DraggableImage";
-import AlertPopup from "../../components/AlertPopup";
+import AlertPopup from "../../components/AlertPopup"; 
+
 
 function PostCreate() {
   const fileInputRef = useRef();
@@ -161,6 +162,15 @@ function PostCreate() {
       });
   };
 
+  const onDiscard = () => setShowAlert(true);
+
+  const handleAlertYes = () => {
+    setShowAlert(false);
+    window.history.back();
+  };
+
+  const handleAlertNo = () => setShowAlert(false);
+
   return (
     <div className="relative min-h-screen bg-[#fcfcf8] p-4 overflow-hidden select-none">
       <DndContext onDragEnd={handleDragEnd}>
@@ -213,12 +223,12 @@ function PostCreate() {
         onChange={handleAddImage}
       />
       {/* Discard 버튼 */}
-      <DiscardButton onClick={onDiscard} />
-
+      <DiscardButton onDiscard={onDiscard} />
       {showAlert && (
         <AlertPopup
           show={showAlert}
-          message="작성 중인 내용이 사라집니다. 정말로 나가시겠습니까?"
+          message={"작성 중인 내용이 사라집니다. 정말로 나가시겠습니까?"}
+
           onYes={handleAlertYes}
           onNo={handleAlertNo}
         />
