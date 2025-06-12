@@ -5,7 +5,8 @@ import PostMenuBar from "../../components/PostMenuBar";
 import DiscardButton from "../../components/DiscardButton";
 import DraggableTextbox from "../../components/DraggableTextbox";
 import DraggableImage from "../../components/DraggableImage";
-import AlertPopup from "../../components/AlertPopup"; // AlertPopup 컴포넌트 import 필요
+import AlertPopup from "../../components/AlertPopup"; 
+
 
 function PostCreate() {
   const fileInputRef = useRef();
@@ -19,7 +20,7 @@ function PostCreate() {
 
   // 텍스트박스 추가
   const handleAddTextbox = () => {
-    const newId = `textbox-${Date.now()}`;
+    const newId = Date.now(); // 숫자 id로 통일
     setTextboxes(prev => [
       ...prev,
       {
@@ -51,14 +52,17 @@ function PostCreate() {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
-      const newId = `image-${Date.now()}`;
+      const newId = Date.now(); // 숫자 id로 통일
       setImages(prev => [
         ...prev,
         {
           id: newId,
-          src: ev.target.result,
           x: 200 + Math.random() * 50,
           y: 300 + prev.length * 120,
+          z: prev.length + 1, // 쌓임 순서
+          src: ev.target.result,
+          userId: userId,
+          // postId는 저장 시 포함
         },
       ]);
     };
@@ -66,7 +70,7 @@ function PostCreate() {
     e.target.value = "";
   };
 
-  // 이미지 삭제 (id 타입 불일치 방지)
+  // 이미지 삭제
   const handleImageDelete = (id) => {
     setImages(prev => prev.filter(img => String(img.id) !== String(id)));
   };
@@ -94,6 +98,15 @@ function PostCreate() {
   // 바깥 클릭 시 편집 해제
   const handleBoardClick = () => setEditingId(null);
 
+  const onDiscard = () => setShowAlert(true);
+
+  const handleAlertYes = () => {
+    setShowAlert(false);
+    window.history.back();
+  };
+
+  const handleAlertNo = () => setShowAlert(false);
+
   // 완료(저장) - DB에 POST 후 이동
   const handleCheck = () => {
     fetch("http://localhost:5000/post", {
@@ -104,33 +117,36 @@ function PostCreate() {
       .then(res => res.json())
       .then(postRes => {
         const postId = postRes.id;
-        // 텍스트박스 저장
+        // 텍스트박스 저장 (id, postId 포함)
         return Promise.all(
           textboxes.map(tb =>
             fetch("http://localhost:5000/textbox", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                postId,
+                id: tb.id,
                 x: tb.x,
                 y: tb.y,
+                postId: postId,
                 content: tb.content,
               }),
             })
           )
         ).then(() =>
-          // 이미지 저장
+          // 이미지 저장 (id, postId, z, width, height, src, userId 포함)
           Promise.all(
-            images.map(img =>
+            images.map((img, idx) =>
               fetch("http://localhost:5000/image", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                  postId,
+                  id: img.id,
                   x: img.x,
                   y: img.y,
+                  z: img.z ?? idx + 1,
+                  postId: postId,
                   src: img.src,
-                  userId,
+                  userId: img.userId,
                 }),
               })
             )
@@ -186,7 +202,7 @@ function PostCreate() {
               x={img.x}
               y={img.y}
               onDelete={handleImageDelete}
-              zIndex={idx + 1} // 인덱스가 높을수록 위에
+              zIndex={img.z ?? idx + 1}
             />
           ))}
         </div>
@@ -212,6 +228,7 @@ function PostCreate() {
         <AlertPopup
           show={showAlert}
           message={"작성 중인 내용이 사라집니다. 정말로 나가시겠습니까?"}
+
           onYes={handleAlertYes}
           onNo={handleAlertNo}
         />
