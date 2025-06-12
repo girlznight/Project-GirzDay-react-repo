@@ -19,7 +19,7 @@ export default function Login() {
 
 
   return (
-    <div className="min-h-screen bg-[#f6f6f6] px-16 pt-20">
+    <div className="min-h-screen bg-[#fcfcf8] px-16 pt-20">
       <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-gray-900">.Yellowmemo</h1>
         <p className="text-lg sm:text-lg md:text-xl lg:text-2xl text-gray-700 font-normal">
           Think, memo, create your own idea board by just One-click
