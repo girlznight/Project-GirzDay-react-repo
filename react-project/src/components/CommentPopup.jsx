@@ -4,7 +4,7 @@ export default function CommentPopup({ open, onClose, value, onChange, onSave })
     if (!open) return null;
 
     return (
-        <div className="fixed inset-0 bg-white bg-opacity-60 z-[99] flex items-center justify-center">
+        <div className="fixed inset-0 bg-white bg-opacity-80 z-[99] flex items-center justify-center">
             <div
                 className="relative w-[380px] h-[380px] p-6 drop-shadow-2xl"
                 style={{
@@ -19,7 +19,7 @@ export default function CommentPopup({ open, onClose, value, onChange, onSave })
                     placeholder="코멘트를 남겨주세요…"
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    maxLength={191}
+                    maxLength={190}
                 />
                 {/* 저장 버튼 */}
                 <button
