@@ -199,7 +199,8 @@ export default function Post() {
                   alignItems: "flex-start",
                   justifyContent: "flex-start",
                   whiteSpace: "pre-wrap",
-                  wordBreak: "break-word"
+                  wordBreak: "break-word",
+                  outline: "none"
                 }}
                 className="select-none text-base text-black"
               >
