@@ -33,7 +33,6 @@ export default function Post() {
   const sidebarRef = useRef(null);
   const isOwner    = ownerId === myId;
 
-  // 데이터 로딩
   useEffect(() => {
     fetch(`http://localhost:5000/post/${id}`)
       .then(r => r.json()).then(p => setOwnerId(Number(p.userId)));
@@ -45,7 +44,6 @@ export default function Post() {
       .then(r => r.json()).then(setPostits);
   }, [id]);
 
-  // 사이드바 외부 클릭 닫기
   useEffect(() => {
     function handleClickOutside(e) {
       if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
@@ -56,7 +54,6 @@ export default function Post() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // **공유 플로우**
   function onShareClick() {
     setShowShareAlert(true);
   }
@@ -64,7 +61,6 @@ export default function Post() {
     setShowShareAlert(false);
     navigator.clipboard.writeText(window.location.href)
       .then(() => {
-        // 복사 성공 알림만 window.alert 로 띄워줍니다
         window.alert("링크가 복사되었습니다!");
       })
       .catch(() => {
@@ -74,12 +70,10 @@ export default function Post() {
   function handleShareNo() {
     setShowShareAlert(false);
   }
-  // **끝**
 
   function goEdit()  { nav(`/post/edit/${id}`); }
   function handleLogout() {
     localStorage.removeItem("userId");
-    // 페이지 이동은 하지 않습니다
   }
 
   async function handleAlertYes() {

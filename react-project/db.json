@@ -4,6 +4,11 @@
       "id": 1,
       "loginId": "user",
       "profile": "data:image/png;base64,SAMPLE_IMAGE_BASE64"
+    },
+    {
+      "loginId": "dpwls",
+      "profile": "",
+      "id": 2
     }
   ],
   "auth": [
@@ -11,12 +16,21 @@
       "id": 1,
       "password": "user123",
       "userId": 1
+    },
+    {
+      "userId": 2,
+      "password": "dpwls125",
+      "id": 2
     }
   ],
   "post": [
     {
       "id": 1,
       "userId": 1
+    },
+    {
+      "userId": 2,
+      "id": 2
     }
   ],
   "textbox": [
@@ -26,6 +40,13 @@
       "y": 200,
       "postId": 1,
       "content": "텍스트 박스 예시입니다"
+    },
+    {
+      "id": 1749822911255,
+      "x": 432.71963114828327,
+      "y": 100,
+      "postId": 2,
+      "content": "test"
     }
   ],
   "postit": [
@@ -37,6 +58,16 @@
       "postId": 1,
       "content": "포스트잇 메모입니다",
       "userId": 1
+    },
+    {
+      "id": "8298815b-c929-436c-9da3-76f23a736537",
+      "postId": "1",
+      "userId": 2,
+      "content": "test",
+      "imgSrc": "/static/media/sticky-note.c2f7c7dd4060a9d1e2f7.png",
+      "x": 120,
+      "y": 120,
+      "zIndex": 60
     }
   ],
   "image": [

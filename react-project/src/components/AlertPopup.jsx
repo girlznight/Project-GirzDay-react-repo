@@ -6,9 +6,7 @@ function AlertPopup({ show, onYes, onNo, message }) {
   if (!show) return null;
 
   return (
-    // overlay: #fcfcf8 at 60% opacity
     <div className="fixed top-0 left-0 w-full h-full bg-[#fcfcf8] bg-opacity-60 flex justify-center items-center z-50">
-      {/* popup box: fully opaque white */}
       <div className="bg-white p-6 rounded-xl w-80 text-center shadow-lg">
         <p className="mb-6 text-lg font-medium">{message}</p>
         <div className="flex justify-center space-x-4">
