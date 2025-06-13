@@ -15,10 +15,11 @@ export default function CommentPopup({ open, onClose, value, onChange, onSave })
                 }}
             >
                 <textarea
-                    className="w-full h-full bg-transparent outline-none resize-none text-[17px] pl-3 pt-3"
+                    className="w-full h-full bg-transparent outline-none resize-none text-[17px] pl-2 pt-2"
                     placeholder="코멘트를 남겨주세요…"
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
+                    maxLength={190}
                 />
                 {/* 저장 버튼 */}
                 <button
