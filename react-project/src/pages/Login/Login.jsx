@@ -26,17 +26,17 @@ export default function Login() {
   // 자동으로 해당 유저의 최근 글 또는 글쓰기 페이지로 이동시키는 처리
   const navigate = useNavigate();
   useEffect(()=> {
-    const userId = localStorage.getItem("userId"); // 로컬 스토리지에서 userId 꺼냄(로그인 되어있는지 확인한다)
+    const userId = localStorage.getItem("userId"); // 로컬 스토리지에서 userId 꺼냄(로그인 되어있는지 확인한다) 없으면 null 반환
     if (userId){                                   // userId가 존재한다면 = 로그인 되어있다면
-      navigate(`/post/&{1}`, {replace:true})       // 페이지로 강제 이동(replace: 뒤로 가기 방지)
+      navigate(`/post/${1}`, {replace:true})       // 페이지로 강제 이동(replace: 뒤로 가기 방지)
     }
-  },[]);
+  },[navigate]);                                   // navigate가 바뀔 때마다 실행됨
 
   // 로그인 상태일 때, 가장 최근 게시글로 이동하거나 새 글 작성 페이지로 이동시킴
   // 로그인한 상태로 다시 로그인 페이지 오면 자동 리디렉션
-   useEffect(() => {
-    redirectIfLoggedIn(); //redirectIfLoggedIn을 컴포넌트가 실행되자마자 실행시켜야 함
-  }, []);                 //페이지 열리자마자 로그인 상태면 튕겨내기
+   useEffect(() => {                  //이 블록 안 코드는 컴포넌트가 처음 렌더링될 때 1번 실행됨됨
+    redirectIfLoggedIn();             //redirectIfLoggedIn을 컴 포넌트가 실행되자마자 실행시켜야 함
+  }, [redirectIfLoggedIn]);           //페이지 열리자마자 로그인 상태면 튕겨내기
 
   
   return (

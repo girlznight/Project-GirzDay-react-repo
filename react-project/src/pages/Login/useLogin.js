@@ -1,6 +1,6 @@
 // 이 파일에서는 로그인 기능에 필요한 로직(상태, 버튼 눌렀을 때 동작 등)을 따로 정리했습니다.
 
-import { useState } from "react";             //상태 저장
+import { useCallback, useState } from "react";             //상태 저장
 import {useNavigate} from "react-router-dom"  //페이지 이동
 import { getUserByLoginId, getAuthByLoginId, getRecentPostByUserId } from "./loginApi"  //로그인할 때 서버랑 통신할 함수들을 여기서 불러옵니다 (다른 파일에서 만든거)
                                             
@@ -26,7 +26,7 @@ export default function useLogin() {
     };
 
     // 유저가 이미 로그인 상태일 경우, 로그인 페이지 접근 시 자동 리다이렉트 시켜주는 함수
-    const redirectIfLoggedIn = async () => {
+    const redirectIfLoggedIn = useCallback(async () => {
         const storedId = getStoredUserId();                         //로컬 스토리지에서 저장된 userId 가져오기
         if (!storedId) return;                                      //userId가 없으면 = 로그인 안되어있으면 함수종료 
 
@@ -36,7 +36,7 @@ export default function useLogin() {
         } else {
             navigate("/post/create", { replace: true });            //최근 글이 없다면 새 글 작성 페이지로 이동 
         }
-    };
+    }, [navigate]);
 
 
 
