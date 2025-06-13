@@ -1,3 +1,4 @@
+// 전부 챗지피티
 import NoteBg from "../assets/sticky-note.png";
 
 export default function CommentPopup({ open, onClose, value, onChange, onSave }) {

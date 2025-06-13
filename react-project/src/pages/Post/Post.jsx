@@ -1,4 +1,4 @@
-/* src/pages/Post/Post.jsx */
+// 전부 챗지피티
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams }      from "react-router-dom";
 

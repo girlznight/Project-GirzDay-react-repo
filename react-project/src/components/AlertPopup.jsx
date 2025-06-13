@@ -1,4 +1,4 @@
-// src/components/AlertPopup.jsx
+// 전부 챗지피티
 import React from "react";
 import CustomButton from "./CustomButton";
 
