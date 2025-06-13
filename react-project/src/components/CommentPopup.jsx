@@ -9,7 +9,7 @@ export default function CommentPopup({ open, onClose, value, onChange, onSave })
         className="relative w-[380px] h-[380px] p-6 drop-shadow-2xl"
         style={{
           backgroundImage: `url(${NoteBg})`,
-          backgroundSize: "conver",
+          backgroundSize: "cover",
           backgroundPosition: "center",
           transform: "rotate(2deg)",
         }}
