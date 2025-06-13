@@ -162,14 +162,6 @@ function PostCreate() {
       });
   };
 
-  const onDiscard = () => setShowAlert(true);
-
-  const handleAlertYes = () => {
-    setShowAlert(false);
-    window.history.back();
-  };
-
-  const handleAlertNo = () => setShowAlert(false);
 
   return (
     <div className="relative min-h-screen bg-[#fcfcf8] p-4 overflow-hidden select-none">
