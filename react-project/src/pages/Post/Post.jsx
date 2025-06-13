@@ -170,7 +170,7 @@ export default function Post() {
             <Drag key={pt.id} id={pt.id} position={{x:pt.x,y:pt.y}}>
               <div
                 style={{
-                  width:320, height:320,
+                  width:220, height:220,
                   backgroundImage:`url(${pt.imgSrc||NoteBg})`,
                   backgroundSize:"cover", backgroundPosition:"center",
                   zIndex:pt.zIndex||i+100,
