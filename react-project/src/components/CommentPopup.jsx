@@ -27,7 +27,7 @@ export default function CommentPopup({ open, onClose, value, onChange, onSave })
                     onClick={onSave}
                     className="absolute bottom-4 right-4 text-2xl leading-none"
                 >
-                    ✔︎
+                    ✓
                 </button>
                 {/* 닫기 버튼 */}
                 <button
