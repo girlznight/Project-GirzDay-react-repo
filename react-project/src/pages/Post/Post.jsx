@@ -202,7 +202,7 @@ export default function Post() {
               style={{
                 position: "absolute",
                 left: tb.x, top: tb.y,
-                zIndex: tb.zIndex || i + 1, // z 인덱스, 없으면 index + 1로 설정
+                zIndex: tb.zIndex ?? i + 1, // z 인덱스, 없으면 index + 1로 설정
                 maxWidth: 320, whiteSpace: "pre-wrap" // whiteSpace: 줄 바꿈 & 공백 보존
               }}
               className="text-base text-black"
@@ -220,7 +220,7 @@ export default function Post() {
                   width: 220, height: 220,
                   backgroundImage: `url(${pt.imgSrc || NoteBg})`,
                   backgroundSize: "cover", backgroundPosition: "center",
-                  zIndex: pt.zIndex || i + 100,
+                  zIndex: pt.zIndex ?? i + 100, // z 인덱스, 없으면 index + 100으로 설정
                   cursor: isOwner ? "grab" : "default",
                   padding: "1.2rem", display: "flex",
                   alignItems: "flex-start", justifyContent: "flex-start",
@@ -242,7 +242,7 @@ export default function Post() {
                 position: "absolute",
                 left: img.x, top: img.y,
                 width: img.width || 200, height: img.height || 200,
-                zIndex: img.zIndex || i + 50
+                zIndex: img.zIndex ?? i + 50 // z 인덱스, 없으면 index + 50으로 설정
               }}
               className="select-none pointer-events-none"
             >
