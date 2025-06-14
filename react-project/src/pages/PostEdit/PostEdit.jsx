@@ -9,6 +9,7 @@ import AlertPopup from "../../components/AlertPopup";
 
 function PostEdit() {
   const { id } = useParams();
+  const postId = id;
   const navigate = useNavigate();
   const fileInputRef = useRef();
   const userId = Number(localStorage.getItem("userId"));
@@ -25,20 +26,20 @@ function PostEdit() {
   const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/textbox?postId=${id}`)
+    fetch(`http://localhost:5000/textbox?postId=${postId}`)
       .then((res) => res.json())
       .then((data) => {
         setTextboxes(data);
         setOriginalTextboxes(data);
       });
 
-    fetch(`http://localhost:5000/image?postId=${id}`)
+    fetch(`http://localhost:5000/image?postId=${postId}`)
       .then((res) => res.json())
       .then((data) => {
         setImages(data);
         setOriginalImages(data);
       });
-  }, [id]);
+  }, [postId]);
 
   // 텍스트박스 내용 변경
   const handleTextboxChange = (id, value) => {
@@ -101,7 +102,7 @@ function PostEdit() {
           src: ev.target.result,
           x: 200 + Math.random() * 50,
           y: 300 + prev.length * 120,
-          postId: String(id), // 서버에 문자열로 보냄
+          postId: postId,
           userId,
           isNew: true,
         },
@@ -141,53 +142,52 @@ function PostEdit() {
       ...prev,
       {
         id: newId,
-        content: "dummy text",
+        content: "",
         x: 100 + prev.length * 30,
         y: 100 + prev.length * 30,
-        postId: String(id), // 문자열로 맞춰줌
+        postId: postId, 
         isNew: true,
       },
     ]);
     setEditingId(newId);
   };
 
-const handleSave = async () => {
-  try {
-    // POST 먼저 하고, 받은 결과로 상태 업데이트
-    const updatedTextboxes = await Promise.all(
-      textboxes.map(async (tb) => {
-        if (tb.isNew) {
-          const res = await fetch(`http://localhost:5000/textbox`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              id: String(tb.id),
-              postId: String(id),
-              x: tb.x,
-              y: tb.y,
-              content: tb.content,
-            }),
-          });
-          const data = await res.json(); // 서버가 새 id를 반환한다고 가정
-          return { ...tb, id: data.id, isNew: false };
-        } else {
-          // 기존 데이터는 PATCH
-          await fetch(`http://localhost:5000/textbox/${(tb.id)}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              postId: String(id),
-              x: tb.x,
-              y: tb.y,
-              content: tb.content,
-            }),
-          });
-          return tb;
-        }
-      })
-    );
+  const handleSave = async () => {
+    try {
+      // 텍스트박스 저장/수정
+      const updatedTextboxes = await Promise.all(
+        textboxes.map(async (tb) => {
+          if (tb.isNew) {
+            const res = await fetch(`http://localhost:5000/textbox`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                id: tb.id,
+                postId: postId,
+                x: tb.x,
+                y: tb.y,
+                content: tb.content,
+              }),
+            });
+            const data = await res.json(); 
+            return { ...tb, id: data.id, isNew: false };
+          } else {
+            await fetch(`http://localhost:5000/textbox/${tb.id}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                postId: postId,
+                x: tb.x,
+                y: tb.y,
+                content: tb.content,
+              }),
+            });
+            return tb;
+          }
+        })
+      );
 
-    setTextboxes(updatedTextboxes);
+      setTextboxes(updatedTextboxes);
 
       // 이미지 저장/수정
       await Promise.all(
@@ -206,8 +206,8 @@ const handleSave = async () => {
               src: img.src,
               x: img.x,
               y: img.y,
-              postId: String(id),
-              userId: Number(userId),
+              postId: postId,
+              userId: userId,
             }),
           });
         })
@@ -216,7 +216,7 @@ const handleSave = async () => {
       // 삭제된 텍스트박스 삭제 요청
       await Promise.all(
         deletedTextboxIds.map((td) =>
-          fetch(`http://localhost:5000/textbox/${(td)}`, { method: "DELETE" })
+          fetch(`http://localhost:5000/textbox/${td}`, { method: "DELETE" })
         )
       );
 
@@ -228,7 +228,7 @@ const handleSave = async () => {
       );
 
       alert("저장 완료!");
-      navigate(`/post/${id}`);
+      navigate(`/post/${postId}`);
     } catch (error) {
       alert("에러가 발생했습니다.");
     }
@@ -251,13 +251,14 @@ const handleSave = async () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-white p-4 overflow-hidden select-none">
+    <div className="relative min-h-screen bg-[#fcfcf8] p-4 overflow-hidden select-none">
       <DndContext onDragEnd={handleDragEnd}>
         <div
-          className="relative w-full h-[90vh] bg-white"
+          className="relative w-full h-[90vh]"
           style={{ minHeight: 500 }}
           onClick={handleBoardClick}
         >
+          {/* 텍스트박스 */}
           {textboxes.map((tb) => (
             <DraggableTextbox
               key={tb.id}
@@ -272,6 +273,7 @@ const handleSave = async () => {
               onCancel={handleTextboxCancel}
             />
           ))}
+          {/* 이미지 */}
           {images.map((img) => (
             <DraggableImage
               key={img.id}
@@ -284,12 +286,14 @@ const handleSave = async () => {
           ))}
         </div>
       </DndContext>
+      {/* 메뉴바 */}
       <PostMenuBar
         onAddTextbox={handleAddTextbox}
         onAddImage={() => fileInputRef.current.click()}
         onCheck={handleSave}
         fileInputRef={fileInputRef}
       />
+      {/* 이미지 업로드 */}
       <input
         ref={fileInputRef}
         type="file"
@@ -297,6 +301,7 @@ const handleSave = async () => {
         style={{ display: "none" }}
         onChange={handleAddImage}
       />
+      {/* Discard 버튼 */}
       <DiscardButton onDiscard={onDiscard} />
       {showAlert && (
         <AlertPopup
