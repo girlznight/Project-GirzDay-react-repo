@@ -106,68 +106,80 @@ export default function Post() {
   // async -> promise 반환 (비동기로 동작)
   // await -> promise 완료될 때까지 기다리고 결과 반환
   async function handleAlertYes() {
+    // 텍스트박스 delete 요청
     const delTb = textboxes.map(tb =>
       fetch(`http://localhost:5000/textbox/${tb.id}`, { method: "DELETE" })
     );
+    // 이미지 delete 요청
     const delImg = images.map(img =>
       fetch(`http://localhost:5000/image/${img.id}`, { method: "DELETE" })
     );
+    // 포스트잇 delete 요청
     const delPt = postits.map(pt =>
       fetch(`http://localhost:5000/postit/${pt.id}`, { method: "DELETE" })
     );
+    // 요청이 끝날 때까지 기다리기
     await Promise.all([...delTb, ...delImg, ...delPt]);
+    // post delete 요청
     await fetch(`http://localhost:5000/post/${id}`, { method: "DELETE" });
-    setShowAlert(false);
+    setShowAlert(false); // 삭제 확인 팝업 닫기
+    // 200ms 뒤 실행
     setTimeout(async () => {
       alert("삭제되었습니다!");
+      // 가장 최신 post 가져오기
       const latest = await fetch("http://localhost:5000/post?_sort=id&_order=desc")
-        .then(r => r.json()).then(ls => ls[0]);
+        .then(r => r.json())
+        .then(ls => ls[0]);
+      // 가장 최신 post 가져오기, 없으면 PostCreate로
       nav(`/post/${latest?.id || "create"}`);
     }, 200);
   }
-  function handleAlertNo() { setShowAlert(false); }
-  function onDiscard() { setShowAlert(true); }
+  function handleAlertNo() { setShowAlert(false); } // 팝업 닫기
+  function onDiscard() { setShowAlert(true); } // 팝업 열기
 
-  function handleDragEnd({ active, delta }) {
-    if (!delta) return;
-    const activeId = String(active.id);
-    setPostits(prev =>
-      prev.map(pt => {
-        if (String(pt.id) !== activeId) return pt;
-        const updated = { ...pt, x: pt.x + delta.x, y: pt.y + delta.y };
+  // 드래그 종료 위치 업데이트 (dnd-kit 사용) & 저장
+  function handleDragEnd({ active, delta }) { // active: 현재 드래그 중인 포스트잇, delta: x, y 변화(드래그 이동 거리)
+    if (!delta) return; // delta가 없으면 return nothing
+    const activeId = String(active.id); // 드래그한 포스트잇 id 문자열로 저장
+    setPostits(prev => // 포스트잇 목록 업데이트
+      prev.map(pt => { // post-it 배열 순회하며 하나씩 확인
+        if (String(pt.id) !== activeId) return pt; // pt의 id가 activeId와 다르면 그대로(pt) 반환
+        const updated = { ...pt, x: pt.x + delta.x, y: pt.y + delta.y }; // 변환된 x, y(delta)값을 더함
         if (isOwner) {
           fetch(`http://localhost:5000/postit/${pt.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(updated)
-          });
+          }); // 현재 사용자가 포스트의 작성자이면 (isOwner) 변경된 포스트잇 정보 서버에 저장
         }
-        return updated;
+        return updated; // 변경된 포스트잇 반환
       })
     );
   }
 
+  // 포스트잇 내용 저장
   function saveComment() {
-    if (!commentText.trim()) return;
-    const nc = {
-      id: crypto.randomUUID(),
+    if (!commentText.trim()) return; // comment 내용이 공백(trim)이면 종료(nothing)
+    const nc = { // new comment
+      id: crypto.randomUUID(), // cryptographically(암호적으로) secure, random UUID (Universally Unique Identifier) -> 랜덤으로 고유한 식별자(Id) 만들어줌
       postId: id,
       userId: myId,
       content: commentText,
       imgSrc: NoteBg,
-      x: 120, y: 120, zIndex: 60
+      x: 120, y: 120, zIndex: 60 // 포스트잇 위치와 레이어(z-index) 순서
     };
     fetch("http://localhost:5000/postit", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(nc)
-    }).then(() => setPostits(p => [...p, nc]));
-    setOpenCmt(false);
-    setCommentText("");
+      headers: { "Content-Type": "application/json" }, // 데이터형식을 json으로 지정
+      body: JSON.stringify(nc) // 만들어진 포스트잇을 json으로 변환
+    }).then(() => setPostits(p => [...p, nc])); // 저장이 완료되면, nc(new comment)를 화면의 포스트잇 목록에 추가
+    setOpenCmt(false); // CommentPopup 닫기
+    setCommentText(""); // comment 내용 비우기
   }
 
   return (
     <div className="relative min-h-screen bg-[#fcfcf8] p-4">
+      {/* 로그아웃 버튼 */}
       <button
         onClick={handleLogout}
         className="fixed top-6 right-8 z-50 text-sm text-blue-600"
@@ -175,26 +187,32 @@ export default function Post() {
         Logout
       </button>
 
+      {/* showSide가 false이면 sidebar toggle button이 보이기, 클릭 시사이드바 열기 */}
       {!showSide && <SidebarToggleBtn onClick={() => setShowSide(true)} />}
+      {/* showSide가 true이면 sidebar 보이기, sidebar에서 닫기 버튼을 누르면사이드바 닫기 */}
       {showSide && <div ref={sidebarRef}><Sidebar onClose={() => setShowSide(false)} /></div>}
 
       <div className="relative w-full h-[90vh] overflow-hidden">
+        {/* DndContext로 drag and drop 기능 활성화 */}
         <DndContext onDragEnd={handleDragEnd}>
-          {textboxes.map((tb, i) => (
+          {/* 텍스트박스 */}
+          {textboxes.map((tb, i) => ( // textbox 배열 순회하며 textbox, index 받아서 렌더링
             <div
               key={tb.id}
               style={{
                 position: "absolute",
                 left: tb.x, top: tb.y,
-                zIndex: tb.zIndex || i + 1,
-                maxWidth: 320, whiteSpace: "pre-wrap"
+                zIndex: tb.zIndex || i + 1, // z 인덱스, 없으면 index + 1로 설정
+                maxWidth: 320, whiteSpace: "pre-wrap" // whiteSpace: 줄 바꿈 & 공백 보존
               }}
               className="text-base text-black"
             >
+              {/* textbox의 content 출력 */}
               {tb.content}
             </div>
           ))}
 
+          {/* 포스트잇 */}
           {postits.map((pt, i) => (
             <Drag key={pt.id} id={pt.id} position={{ x: pt.x, y: pt.y }}>
               <div
@@ -216,6 +234,7 @@ export default function Post() {
             </Drag>
           ))}
 
+          {/* 이미지 */}
           {images.map((img, i) => (
             <div
               key={img.id}
