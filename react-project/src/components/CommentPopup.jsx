@@ -14,6 +14,7 @@ export default function CommentPopup({ open, onClose, value, onChange, onSave })
                     transform: "rotate(2deg)",
                 }}
             >
+                {/* 코멘트 작성 */}
                 <textarea
                     className="w-full h-full bg-transparent outline-none resize-none text-[17px] pl-2 pt-2"
                     placeholder="코멘트를 남겨주세요…"
