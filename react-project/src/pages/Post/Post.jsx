@@ -213,12 +213,12 @@ export default function Post() {
           ))}
 
           {/* 포스트잇 */}
-          {postits.map((pt, i) => (
+          {postits.map((pt, i) => ( // 포스트잇 배열을 순회하며 렌더링
             <Drag key={pt.id} id={pt.id} position={{ x: pt.x, y: pt.y }}>
               <div
                 style={{
-                  width: 220, height: 220,
-                  backgroundImage: `url(${pt.imgSrc || NoteBg})`,
+                  width: 220, height: 220, // 포스트잇 크기
+                  backgroundImage: `url(${NoteBg})`,
                   backgroundSize: "cover", backgroundPosition: "center",
                   zIndex: pt.zIndex ?? i + 100, // z 인덱스, 없으면 index + 100으로 설정
                   cursor: isOwner ? "grab" : "default",
