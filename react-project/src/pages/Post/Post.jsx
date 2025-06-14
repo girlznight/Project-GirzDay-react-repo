@@ -221,21 +221,22 @@ export default function Post() {
                   backgroundImage: `url(${NoteBg})`,
                   backgroundSize: "cover", backgroundPosition: "center",
                   zIndex: pt.zIndex ?? i + 100, // z 인덱스, 없으면 index + 100으로 설정
-                  cursor: isOwner ? "grab" : "default",
+                  cursor: isOwner ? "grab" : "default", // 현재 사용자가 포스트잇 작성자이면 cursor를 grab으로 변경, 아니면 default
                   padding: "1.2rem", display: "flex",
-                  alignItems: "flex-start", justifyContent: "flex-start",
-                  whiteSpace: "pre-wrap", wordBreak: "break-word",
-                  outline: "none"
+                  alignItems: "flex-start", justifyContent: "flex-start", // 세로축, 가로축 왼쪽 정렬
+                  whiteSpace: "pre-wrap", wordBreak: "break-word", // 줄바꿈&공백 그대로 유지(자동 줄바꿈), 단어가 길어서 넘치면 단어 중간에서 줄바꿈 
+                  outline: "none" // focus 받았을 때 외곽선 나타나지 않음
                 }}
                 className="select-none text-base text-black"
               >
+                {/* 포스트잇 내용 출력 */}
                 {pt.content}
               </div>
             </Drag>
           ))}
 
           {/* 이미지 */}
-          {images.map((img, i) => (
+          {images.map((img, i) => ( // 이미지 배열 순회하며 렌더링
             <div
               key={img.id}
               style={{
@@ -249,7 +250,7 @@ export default function Post() {
               <img
                 src={img.src} alt=""
                 className="object-contain w-full h-full"
-                draggable={false}
+                draggable={false} // 마우스로 drag 금지
               />
             </div>
           ))}
@@ -257,19 +258,26 @@ export default function Post() {
       </div>
 
       <div className="fixed bottom-6 right-6 z-50 flex gap-6">
+        {/* 버튼 클릭 -> CommentPopup 열기 (포스트잇 추가) */}
         <button onClick={() => setOpenCmt(true)}>
           <img src={CommentIcon} alt="comment" className="w-8 h-8" />
         </button>
+        {/* CommentPopup이 false일 때 아래 버튼들 보여주기 */}
         {!openCmt && (
           <>
+            {/* 클릭 시 공유 기능 실행 */}
             <button onClick={onShareClick}>
               <img src={ShareIcon} alt="share" className="w-8 h-8" />
             </button>
+            {/* 현재 사용자가 작성자일 때만 실행 */}
             {isOwner && (
               <>
+                {/* 클릭 시 PostEdit로 이동 */}
                 <button onClick={goEdit}>
                   <img src={EditIcon} alt="edit" className="w-8 h-8" />
                 </button>
+                {/* 클릭 시 삭제 확인 팝업 열기 */}
+                {/* !!alert popup이 뜨는가..? 뭐 뜨는지 확인하기!! */}
                 <button onClick={onDiscard}>
                   <img src={DeleteIcon} alt="delete" className="w-8 h-8" />
                 </button>
@@ -279,12 +287,12 @@ export default function Post() {
         )}
       </div>
 
-      {/* 공유 전 확인 팝업 */}
+      {/* 공유 확인 팝업 */}
       <AlertPopup
         show={showShareAlert}
         message="링크를 복사하시겠습니까?"
-        onYes={handleShareYes}
-        onNo={handleShareNo}
+        onYes={handleShareYes} // Yes 클릭 시 호출
+        onNo={handleShareNo} // No 클릭 시 호출
       />
 
       {/* 삭제 확인 팝업 */}
@@ -292,18 +300,18 @@ export default function Post() {
         <AlertPopup
           show={showAlert}
           message="정말로 삭제하시겠습니까?"
-          onYes={handleAlertYes}
-          onNo={handleAlertNo}
+          onYes={handleAlertYes} // Yes 클릭 시 호출
+          onNo={handleAlertNo} // No 클릭 시 호출
         />
       )}
 
       {/* 댓글 팝업 */}
       <CommentPopup
-        open={openCmt}
-        onClose={() => setOpenCmt(false)}
-        value={commentText}
-        onChange={setCommentText}
-        onSave={saveComment}
+        open={openCmt} // popup 상태 관리 true->열림, false->닫힘
+        onClose={() => setOpenCmt(false)} // popup 닫기
+        value={commentText} // comment 입력창 현재 상태
+        onChange={setCommentText} // 입력창에 글 쓸 때마다 commentText 업데이트
+        onSave={saveComment} // save btn 클릭 -> comment contents save
       />
     </div>
   );
