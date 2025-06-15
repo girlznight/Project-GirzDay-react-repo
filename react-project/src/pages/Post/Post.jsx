@@ -229,7 +229,7 @@ export default function Post() {
                 style={{
                   backgroundImage: `url(${NoteBg})`, // 포스트잇 배경 이미지
                   backgroundSize: "cover", // 배경 이미지 꽉 채우기
-                  backgroundPosition: "center",  // 배경 이미지 중앙 정렬
+                  backgroundPosition: "center", // 배경 이미지 중앙 정렬
                   zIndex: pt.zIndex ?? i + 100, // z 인덱스, 없으면 index + 100으로 설정
                   cursor: isOwner ? "grab" : "default", // 현재 사용자가 포스트잇 작성자이면 cursor를 grab으로 변경, 아니면 default
                   padding: "1.2rem", // 내부 여백
@@ -237,13 +237,13 @@ export default function Post() {
                   alignItems: "flex-start", justifyContent: "flex-start", // 세로축, 가로축 왼쪽 정렬
                   whiteSpace: "pre-wrap", // 줄바꿈&공백 그대로 유지(자동 줄바꿈)
                   wordBreak: "break-word", // 단어가 길어서 넘치면 단어 중간에서 줄바꿈
-                  outline: "none"  // focus 받았을 때 외곽선 나타나지 않음
+                  outline: "none" // focus 받았을 때 외곽선 나타나지 않음
                 }}
                 className="select-none text-sm xl:text-base 2xl:text-lg text-black w-[160px] h-[160px] xl:w-[180px] xl:h-[180px] 2xl:w-[190px] 2xl:h-[190px] transition-all duration-300"
-                        // 텍스트 선택(드래그) 불가
-                        //  글자 크기 : small, xl(1280px 이상): base, 2xl(1536px이상): large
-                        // w, h : 너비, 높이 지정
-                        // 트랜지션(애니메이션) 효과 적용, 지속시간 300ms
+              // 텍스트 선택(드래그) 불가
+              //  글자 크기 : small, xl(1280px 이상): base, 2xl(1536px이상): large
+              // w, h : 너비, 높이 지정
+              // 트랜지션(애니메이션) 효과 적용, 지속시간 300ms
 
                 onMouseEnter={() => pt.userId === myId && setHoverId(pt.id)}  /* 마우스 커서가 내가 쓴 post it 위에 올려졌을 때만 hover 시작 */
                 onMouseLeave={() => pt.userId === myId && setHoverId(null)}  /* 마우스 커서가 내가 쓴 post it을 벗어나면 hover 끝 */
