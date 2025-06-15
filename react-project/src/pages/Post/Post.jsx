@@ -197,7 +197,7 @@ export default function Post() {
         Logout
       </button>
 
-      {/* showSide가 false이면 sidebar toggle button이 보이기, 클릭 시사이드바 열기 */}
+      {/* showSide가 false이면 sidebar toggle button이 보이기, 클릭 시 사이드바 열기 */}
       {!showSide && <SidebarToggleBtn onClick={() => setShowSide(true)} />}
       {/* showSide가 true이면 sidebar 보이기, sidebar에서 닫기 버튼을 누르면사이드바 닫기 */}
       {showSide && <div ref={sidebarRef}><Sidebar onClose={() => setShowSide(false)} /></div>}
@@ -247,6 +247,7 @@ export default function Post() {
 
                 onMouseEnter={() => pt.userId === myId && setHoverId(pt.id)}  /* 마우스 커서가 내가 쓴 post it 위에 올려졌을 때만 hover 시작 */
                 onMouseLeave={() => pt.userId === myId && setHoverId(null)}  /* 마우스 커서가 내가 쓴 post it을 벗어나면 hover 끝 */
+
               >
                 {/* 포스트잇 내용 출력 */}
                 {pt.content}
