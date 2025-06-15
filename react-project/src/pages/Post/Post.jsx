@@ -5,6 +5,7 @@ import Sidebar from "../../components/SideBar";
 import SidebarToggleBtn from "../../components/SidebarToggleButton";
 import AlertPopup from "../../components/AlertPopup";
 import CommentPopup from "../../components/CommentPopup";
+import CommentEditPopup from "../../components/CommentEditPopup";
 import { DndContext } from "@dnd-kit/core"; // DndContext -> drag and drop 기능 활성화
 import Drag from "../../components/Drag";
 
@@ -17,7 +18,7 @@ import NoteBg from "../../assets/sticky-note.png";
 // Post 페이지
 // 사용자가 만든 페이지를 보여주는 기능을 제공
 // DndContext를 사용하여 comment (sticky-note = post-it) 이동 기능 구현
-// DndContext는 dnd-kit 라이브러리에서 제공하는 컴포넌트로, drag n dro 기능 활성화 함
+// DndContext는 dnd-kit 라이브러리에서 제공하는 컴포넌트로, drag n drop 기능 활성화 함
 // useNavigate 훅을 사용하여 페이지 이동 기능 구현
 
 export default function Post() {
@@ -34,6 +35,10 @@ export default function Post() {
   const [commentText, setCommentText] = useState(""); // comment 내용 상태
   const [ownerId, setOwnerId] = useState(null); // post의 owner의 id 저장하는 용도
   const [showAlert, setShowAlert] = useState(false); // 경고 팝업 표시 여부
+
+  const [hoverId, setHoverId] = useState(null); // 현재 마우스 올린 Post it의 ID (... 버튼 노출 제어용)
+  const [editingId, setEditingId] = useState(null); // 편집 중인 Post it의 ID (어떤 post it을 수정할지)
+  const [draftText, setDraftText] = useState(""); // CommentEditPopup 안에 입력 중인 텍스트
 
   const sidebarRef = useRef(null); // SideBar 컴포넌트의 DOM 요소를 참조
   const isOwner = ownerId === myId; // 현재 사용자가 post 소유자인지 확인
@@ -62,8 +67,13 @@ export default function Post() {
   useEffect(() => {
     // 클릭한 요소(e.target)가 sidebar 내부에 존재하지 않으면 닫음
     function handleClickOutside(e) {
+      // 사이드바 외부 클릭 시 닫기
       if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
         setShowSide(false);
+      }
+      if (!e.target.closest(".postit-wrapper")) {
+        // postit-wrapper 외부 클릭 시 ... 버튼 숨기기
+        setHoverId(null);
       }
     }
     // mousedown 발생할 때마다 handleClickOutside 함수가 실행되도록 eventListener 등록
@@ -216,6 +226,7 @@ export default function Post() {
           {postits.map((pt, i) => ( // 포스트잇 배열을 순회하며 렌더링
             <Drag key={pt.id} id={pt.id} position={{ x: pt.x, y: pt.y }}>
               <div
+                className="postit-wrapper select-none text-base text-black" // 포스트잇 전체 영역을 감싸는 래퍼 (드래그, hover 제어용)
                 style={{
                   width: 220, height: 220, // 포스트잇 크기
                   backgroundImage: `url(${NoteBg})`,
@@ -227,10 +238,28 @@ export default function Post() {
                   whiteSpace: "pre-wrap", wordBreak: "break-word", // 줄바꿈&공백 그대로 유지(자동 줄바꿈), 단어가 길어서 넘치면 단어 중간에서 줄바꿈 
                   outline: "none" // focus 받았을 때 외곽선 나타나지 않음
                 }}
-                className="select-none text-base text-black"
+                // ▶ 추가: 내가쓴 포스트잇에 hover 시 hoverId 설정
+                onMouseEnter={() => pt.userId === myId && setHoverId(pt.id)}
+                // ▶ 추가: hover 해제 시 hoverId null
+                onMouseLeave={() => pt.userId === myId && setHoverId(null)}
               >
                 {/* 포스트잇 내용 출력 */}
                 {pt.content}
+
+                {/* … 버튼: 내가 쓴 포스트잇에 hover 시 오른쪽 상단 */}
+                {hoverId === pt.id && (
+                  <button
+                    className="absolute top-1 right-3"
+                    onPointerDown={e => e.stopPropagation()}
+                    onClick={() => {
+                      // ▶ 추가: 편집 모드 진입
+                      setEditingId(pt.id);
+                      setDraftText(pt.content);
+                    }}
+                  >
+                    …
+                  </button>
+                )}
               </div>
             </Drag>
           ))}
@@ -258,7 +287,7 @@ export default function Post() {
       </div>
 
       <div className="fixed bottom-6 right-6 z-50 flex gap-6">
-        {/* 버튼 클릭 -> CommentPopup 열기 (포스트잇 추가) */}
+        {/* 버튼 클릭 -> CommentPopup 열기 (포스트잇 추가) */}
         <button onClick={() => setOpenCmt(true)}>
           <img src={CommentIcon} alt="comment" className="w-8 h-8" />
         </button>
@@ -312,6 +341,39 @@ export default function Post() {
         value={commentText} // comment 입력창 현재 상태
         onChange={setCommentText} // 입력창에 글 쓸 때마다 commentText 업데이트
         onSave={saveComment} // save btn 클릭 -> comment contents save
+      />
+
+      {/* 편집 팝업: CommentEditPopup */}
+      <CommentEditPopup
+        open={editingId !== null} // 편집 팝업 열지 말지 결정 (editingId가 null이 아니면 열기)
+        value={draftText} // 팝업 textarea에 표시할 텍스트
+        onChange={setDraftText} // textarea 변경 시 draftText 업데이트
+        onClose={() => setEditingId(null)} // × 클릭 시 편집 모드 종료
+        onSave={() => { // ✓ 버튼 클릭 시 서버에 PUT, 로컬 상태 업데이트
+          fetch(`http://localhost:5000/postit/${editingId}`, {
+            method: "PUT", // PUT 메서드 사용
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              ...postits.find(p => p.id === editingId), // 기존 post it 데이터
+              content: draftText // 수정된 내용 덮어쓰기
+            })
+          }).then(() => {
+            setPostits(ps =>
+              ps.map(p =>
+                p.id === editingId ? { ...p, content: draftText } : p // 로컬 post it 배열 순회하며 해당 아이디의 content만 교체
+              )
+            );
+            setEditingId(null); // 편집 모드 종료
+          });
+        }}
+        onDelete={() => { // 휴지통 버튼 클릭 시 서버에 DELETE, 로컬 상태에서 제거
+          fetch(`http://localhost:5000/postit/${editingId}`, {
+            method: "DELETE" // DELETE 메서드 사용
+          }).then(() => {
+            setPostits(ps => ps.filter(p => p.id !== editingId)); // 해당 post it만 필터링
+            setEditingId(null); // 편집 모드 종료
+          });
+        }}
       />
     </div>
   );
