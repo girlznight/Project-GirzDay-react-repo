@@ -20,7 +20,7 @@ export default function CommentPopup({ open, onClose, value, onChange, onSave })
                     placeholder="코멘트를 남겨주세요…"
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    maxLength={190}
+                    maxLength={100}
                 />
                 {/* 저장 버튼 */}
                 <button

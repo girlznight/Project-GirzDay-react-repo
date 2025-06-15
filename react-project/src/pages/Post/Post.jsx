@@ -273,6 +273,7 @@ export default function Post() {
           ))}
           
 
+
           {/* 이미지 */}
           {images.map((img, i) => ( // 이미지 배열 순회하며 렌더링
             <div
