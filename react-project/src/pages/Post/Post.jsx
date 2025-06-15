@@ -233,11 +233,11 @@ export default function Post() {
                   zIndex: pt.zIndex ?? i + 100, // z 인덱스, 없으면 index + 100으로 설정
                   cursor: isOwner ? "grab" : "default", // 현재 사용자가 포스트잇 작성자이면 cursor를 grab으로 변경, 아니면 default
                   padding: "1.2rem", // 내부 여백
-                  display: "flex",  // flex 레이아웃 사용
+                  display: "flex", // flex 레이아웃 사용
                   alignItems: "flex-start", justifyContent: "flex-start", // 세로축, 가로축 왼쪽 정렬
                   whiteSpace: "pre-wrap", // 줄바꿈&공백 그대로 유지(자동 줄바꿈)
                   wordBreak: "break-word", // 단어가 길어서 넘치면 단어 중간에서 줄바꿈
-                  outline: "none",  // focus 받았을 때 외곽선 나타나지 않음
+                  outline: "none"  // focus 받았을 때 외곽선 나타나지 않음
                 }}
                 className="select-none text-sm xl:text-base 2xl:text-lg text-black w-[160px] h-[160px] xl:w-[180px] xl:h-[180px] 2xl:w-[190px] 2xl:h-[190px] transition-all duration-300"
                         // 텍스트 선택(드래그) 불가
