@@ -217,7 +217,6 @@ export default function Post() {
             <Drag key={pt.id} id={pt.id} position={{ x: pt.x, y: pt.y }}>
               <div
                 style={{
-                  // width, height는 Tailwind 클래스로 대체 (아래 className 참고)
                   backgroundImage: `url(${NoteBg})`, // 포스트잇 배경 이미지
                   backgroundSize: "cover", // 배경 이미지 꽉 채우기
                   backgroundPosition: "center", // 배경 이미지 중앙 정렬
