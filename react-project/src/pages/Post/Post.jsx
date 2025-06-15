@@ -187,7 +187,7 @@ export default function Post() {
         Logout
       </button>
 
-      {/* showSide가 false이면 sidebar toggle button이 보이기, 클릭 시사이드바 열기 */}
+      {/* showSide가 false이면 sidebar toggle button이 보이기, 클릭 시 사이드바 열기 */}
       {!showSide && <SidebarToggleBtn onClick={() => setShowSide(true)} />}
       {/* showSide가 true이면 sidebar 보이기, sidebar에서 닫기 버튼을 누르면사이드바 닫기 */}
       {showSide && <div ref={sidebarRef}><Sidebar onClose={() => setShowSide(false)} /></div>}
@@ -217,23 +217,31 @@ export default function Post() {
             <Drag key={pt.id} id={pt.id} position={{ x: pt.x, y: pt.y }}>
               <div
                 style={{
-                  width: 220, height: 220, // 포스트잇 크기
-                  backgroundImage: `url(${NoteBg})`,
-                  backgroundSize: "cover", backgroundPosition: "center",
+                  // width, height는 Tailwind 클래스로 대체 (아래 className 참고)
+                  backgroundImage: `url(${NoteBg})`, // 포스트잇 배경 이미지
+                  backgroundSize: "cover", // 배경 이미지 꽉 채우기
+                  backgroundPosition: "center", // 배경 이미지 중앙 정렬
                   zIndex: pt.zIndex ?? i + 100, // z 인덱스, 없으면 index + 100으로 설정
                   cursor: isOwner ? "grab" : "default", // 현재 사용자가 포스트잇 작성자이면 cursor를 grab으로 변경, 아니면 default
-                  padding: "1.2rem", display: "flex",
+                  padding: "1.2rem", // 내부 여백
+                  display: "flex", // flex 레이아웃 사용
                   alignItems: "flex-start", justifyContent: "flex-start", // 세로축, 가로축 왼쪽 정렬
-                  whiteSpace: "pre-wrap", wordBreak: "break-word", // 줄바꿈&공백 그대로 유지(자동 줄바꿈), 단어가 길어서 넘치면 단어 중간에서 줄바꿈 
+                  whiteSpace: "pre-wrap", // 줄바꿈&공백 그대로 유지(자동 줄바꿈)
+                  wordBreak: "break-word", // 단어가 길어서 넘치면 단어 중간에서 줄바꿈
                   outline: "none" // focus 받았을 때 외곽선 나타나지 않음
                 }}
-                className="select-none text-base text-black"
+                className="select-none text-sm xl:text-base 2xl:text-lg text-black w-[160px] h-[160px] xl:w-[180px] xl:h-[180px] 2xl:w-[190px] 2xl:h-[190px] transition-all duration-300"
+              // 텍스트 선택(드래그) 불가
+              //  글자 크기 : small, xl(1280px 이상): base, 2xl(1536px이상): large
+              // w, h : 너비, 높이 지정
+              // 트랜지션(애니메이션) 효과 적용, 지속시간 300ms
               >
                 {/* 포스트잇 내용 출력 */}
                 {pt.content}
               </div>
             </Drag>
           ))}
+
 
           {/* 이미지 */}
           {images.map((img, i) => ( // 이미지 배열 순회하며 렌더링
