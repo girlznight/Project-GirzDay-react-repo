@@ -70,7 +70,7 @@ function Home() {
         </div>
 
         {/* 중앙 포스트잇 or Get Started! */}
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center mt-12">
           {step === "note" && (
             <img
               src={StickyNote}
@@ -78,9 +78,9 @@ function Home() {
               className="
                 mt-5
                 w-40 h-40
-                sm:w-56 sm:h-56
-                md:w-72 md:h-72
-                lg:w-96 lg:h-96
+                sm:w-48 sm:h-48
+                md:w-64 md:h-64
+                lg:w-80 lg:h-80
                 object-contain cursor-pointer animate-wind
                 hover:transition-transform duration-500
               "
