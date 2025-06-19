@@ -5,7 +5,7 @@ function DraggableTextbox({
   id, content, x, y, onDelete, onChange,
 }) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({ id });
-
+  
   // 위치 스타일
   const style = {
     position: "absolute",
@@ -53,26 +53,25 @@ function DraggableTextbox({
       </button>
       {/* 텍스트박스 */}
       <div
-        className="px-8 py-6 min-h-[60px] transition-colors duration-150 border border-gray-300 bg-transparent"
+        className="px-4 py-2 border border-gray-300 bg-transparent"
         style={{
           fontFamily: "inherit",
           display: "inline-block",
-          minWidth: 200,
+          whiteSpace: "pre-wrap",
           width: "fit-content",
-          maxWidth: "none",
-          padding: "24px 4px",
+          padding: "12px 4px", 
         }}
       >
         <input
           type="text"
           value={content}
           onChange={e => onChange(id, e.target.value)}
-          className="text-black text-center text-lg bg-transparent outline-none"
+          className="text-black text-center text-base bg-transparent outline-none"
           style={{
             display: "inline-block",
             fontFamily: "inherit",
-            minWidth: 200,
-            width: `${Math.max(200, content.length * 18)}px`, // 글자 수에 따라 가로로 늘어남 (18은 글자당 px, 필요시 조정)
+            minWidth: 100,
+            width: `${Math.max(200, content.length * 18)}px`,
             border: "none",
             background: "transparent",
           }}

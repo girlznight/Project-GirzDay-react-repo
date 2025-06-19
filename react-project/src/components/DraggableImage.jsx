@@ -26,7 +26,12 @@ function DraggableImage({ id, src, x, y, onDelete, zIndex }) {
       >
         <span className="text-lg font-bold text-gray-500">×</span>
       </button>
-      <img src={src} alt="" className="max-w-[250px] cursor-default" draggable={false} />
+      <img
+        src={src}
+        alt=""
+        className="object-contain w-[200px] h-[200px] cursor-default" // ← 크기 고정
+        draggable={false}
+      />
       {/* 드래그 핸들: 하단 바에만 listeners/attributes 부착 */}
       <div
         {...listeners}
