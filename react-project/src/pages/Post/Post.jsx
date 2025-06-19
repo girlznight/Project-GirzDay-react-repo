@@ -188,7 +188,7 @@ export default function Post() {
   }
 
   return (
-    <div className="relative min-h-screen bg-[#fcfcf8] p-4">
+    <div className="relative min-h-screen bg-[#fcfcf8] p-4 overflow-hidden select-none">
       {/* 로그아웃 버튼 */}
       <button
         onClick={handleLogout}
@@ -206,19 +206,44 @@ export default function Post() {
         {/* DndContext로 drag and drop 기능 활성화 */}
         <DndContext onDragEnd={handleDragEnd}>
           {/* 텍스트박스 */}
-          {textboxes.map((tb, i) => ( // textbox 배열 순회하며 textbox, index 받아서 렌더링
+          { textboxes.map((tb, i) => (
             <div
               key={tb.id}
               style={{
                 position: "absolute",
-                left: tb.x, top: tb.y,
-                zIndex: tb.zIndex ?? i + 1, // z 인덱스, 없으면 index + 1로 설정
-                maxWidth: 320, whiteSpace: "pre-wrap" // whiteSpace: 줄 바꿈 & 공백 보존
+                left: tb.x,
+                top: tb.y,
+                zIndex: tb.zIndex ?? i + 1,
+                minWidth: 200,
               }}
-              className="text-base text-black"
+              tabIndex={0}
+              className="group"
             >
-              {/* textbox의 content 출력 */}
-              {tb.content}
+              <div
+                className="px-4 py-2 bg-transparent"
+                style={{
+                  fontFamily: "inherit",
+                  display: "inline-block",
+                  whiteSpace: "pre-wrap",
+                  width: "fit-content",
+                  padding: "12px 4px",
+                }}
+              >
+                <input
+                  type="text"
+                  value={tb.content}
+                  readOnly
+                  className="text-black text-center text-base bg-transparent outline-none"
+                  style={{
+                    display: "inline-block",
+                    fontFamily: "inherit",
+                    minWidth: 100,
+                    width: `${Math.max(200, tb.content.length * 18)}px`,
+                    border: "none",
+                    background: "transparent",
+                  }}
+                />
+              </div>
             </div>
           ))}
 
@@ -349,7 +374,7 @@ export default function Post() {
         open={openCmt} // popup 상태 관리 true->열림, false->닫힘
         onClose={() => setOpenCmt(false)} // popup 닫기
         value={commentText} // comment 입력창 현재 상태
-        onChange={setCommentText} // 입력창에 글 쓸 때마다 commentText 업데이트
+        onChange={setCommentText} // 입력창에 글 쓸 때마다 commentText 업데이트
         onSave={saveComment} // save btn 클릭 -> comment contents save
       />
 
