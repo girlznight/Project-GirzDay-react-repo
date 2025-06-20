@@ -8,6 +8,7 @@ import CommentPopup from "../../components/CommentPopup";
 import CommentEditPopup from "../../components/CommentEditPopup";
 import { DndContext } from "@dnd-kit/core"; // DndContext -> drag and drop 기능 활성화
 import Drag from "../../components/Drag";
+import { getMaxLineLength } from "../../components/textboxUtils";
 
 import CommentIcon from "../../assets/post_comment.svg";
 import ShareIcon from "../../assets/post_share.svg";
@@ -20,6 +21,59 @@ import NoteBg from "../../assets/sticky-note.png";
 // DndContext를 사용하여 comment (sticky-note = post-it) 이동 기능 구현
 // DndContext는 dnd-kit 라이브러리에서 제공하는 컴포넌트로, drag n drop 기능 활성화 함
 // useNavigate 훅을 사용하여 페이지 이동 기능 구현
+
+function PostTextbox({ content }) {
+  const textareaRef = useRef(null);
+
+  // DraggableTextbox와 동일한 width 계산
+  const charWidth = 18;
+  const minWidth = 200;
+  const maxWidth = 500;
+  const maxLineLength = getMaxLineLength(content);
+  const calcWidth = Math.min(Math.max(minWidth, maxLineLength * charWidth), maxWidth);
+
+  // 높이 자동 조절
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
+    }
+  }, [content]);
+
+  return (
+    <div
+      className="px-4 py-2 bg-transparent"
+      style={{
+        fontFamily: "inherit",
+        display: "inline-block",
+        whiteSpace: "pre-wrap",
+        width: `${calcWidth}px`,
+        minWidth: `${minWidth}px`,
+        maxWidth: `${maxWidth}px`,
+        padding: "12px 4px",
+      }}
+    >
+      <textarea
+        ref={textareaRef}
+        value={content}
+        readOnly
+        className="text-black text-center text-base bg-transparent outline-none"
+        style={{
+          display: "block",
+          fontFamily: "inherit",
+          width: "100%",
+          minWidth: "100%",
+          maxWidth: "100%",
+          border: "none",
+          background: "transparent",
+          overflow: "hidden",
+          resize: "none",
+        }}
+        rows={1}
+      />
+    </div>
+  );
+}
 
 export default function Post() {
   const { id } = useParams(); // useParams 훅을 사용해서 현재 URL 파라미터에서의 ID 값을 id 변수에 저장
@@ -219,31 +273,7 @@ export default function Post() {
               tabIndex={0}
               className="group"
             >
-              <div
-                className="px-4 py-2 bg-transparent"
-                style={{
-                  fontFamily: "inherit",
-                  display: "inline-block",
-                  whiteSpace: "pre-wrap",
-                  width: "fit-content",
-                  padding: "12px 4px",
-                }}
-              >
-                <input
-                  type="text"
-                  value={tb.content}
-                  readOnly
-                  className="text-black text-center text-base bg-transparent outline-none"
-                  style={{
-                    display: "inline-block",
-                    fontFamily: "inherit",
-                    minWidth: 100,
-                    width: `${Math.max(200, tb.content.length * 18)}px`,
-                    border: "none",
-                    background: "transparent",
-                  }}
-                />
-              </div>
+              <PostTextbox content={tb.content} />
             </div>
           ))}
 

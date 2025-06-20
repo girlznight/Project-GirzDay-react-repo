@@ -1,19 +1,36 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { useDraggable } from "@dnd-kit/core";
+import { getMaxLineLength } from "./textboxUtils";
 
 function DraggableTextbox({
   id, content, x, y, onDelete, onChange,
 }) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({ id });
+  const textareaRef = useRef(null);
   
+  // 가장 긴 줄의 글자 수 계산
+  const charWidth = 18; // 글자당 px (폰트에 따라 조정)
+  const minWidth = 200;
+  const maxWidth = 500;
+  const maxLineLength = getMaxLineLength(content);
+  const calcWidth = Math.min(Math.max(minWidth, maxLineLength * charWidth), maxWidth);
+
   // 위치 스타일
   const style = {
     position: "absolute",
     left: transform ? x + transform.x : x,
     top: transform ? y + transform.y : y,
     zIndex: 1,
-    minWidth: 200,
+    minWidth: minWidth,
   };
+
+  // content가 바뀔 때마다 textarea 높이 자동 조절
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
+    }
+  }, [content]);
 
   return (
     <div
@@ -58,23 +75,29 @@ function DraggableTextbox({
           fontFamily: "inherit",
           display: "inline-block",
           whiteSpace: "pre-wrap",
-          width: "fit-content",
-          padding: "12px 4px", 
+          width: `${calcWidth}px`,
+          minWidth: `${minWidth}px`,
+          maxWidth: `${maxWidth}px`,
+          padding: "12px 4px",
         }}
       >
-        <input
-          type="text"
+        <textarea
+          ref={textareaRef}
           value={content}
           onChange={e => onChange(id, e.target.value)}
           className="text-black text-center text-base bg-transparent outline-none"
           style={{
-            display: "inline-block",
+            display: "block",
             fontFamily: "inherit",
-            minWidth: 100,
-            width: `${Math.max(200, content.length * 18)}px`,
+            width: "100%",
+            minWidth: "100%",
+            maxWidth: "100%",
             border: "none",
             background: "transparent",
+            overflow: "hidden",
+            resize: "none",
           }}
+          rows={1}
         />
       </div>
     </div>
