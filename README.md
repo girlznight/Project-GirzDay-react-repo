@@ -1,6 +1,6 @@
 # Project-GirzDay-react-repo
 
-[Project introduce](https://github.com/girlznight)
+🔥[Project introduce](https://github.com/girlznight)🔥
 
 ## 🌿 브랜치 전략 / Branch Strategy
 
