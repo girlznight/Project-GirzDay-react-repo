@@ -116,7 +116,7 @@ function Sidebar() {
       </CustomButton>
 
       <CustomButton
-        onClick={() => goTo("/post/4")}
+        onClick={() => goTo("/our-team")}
         className="w-[90%] bg-white rounded-xl py-3 mt-2 mb-1 text-base hover:bg-slate-100"
       >
         Our Team <span role="img" aria-label="team">📝</span>
