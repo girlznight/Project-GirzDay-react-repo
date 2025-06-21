@@ -123,7 +123,7 @@ function Sidebar() {
       </CustomButton>
 
       <CustomButton
-        onClick={() => goTo("/post/3")}
+        onClick={() => goTo("/program-introduce")}
         className="w-[90%] bg-white rounded-xl py-3 mt-2 mb-8 text-base hover:bg-slate-100"
       >
         현지학기 소개 <span role="img" aria-label="현지학기제">📝</span>
