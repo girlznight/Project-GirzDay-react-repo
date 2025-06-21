@@ -110,9 +110,23 @@ function Sidebar() {
       {/* New Post 버튼 */}
       <CustomButton
         onClick={() => goTo("/post/create")}
-        className="w-[90%] bg-black text-white rounded-xl py-3 mt-2 mb-10 text-base hover:bg-gray-900"
+        className="w-[90%] bg-black text-white rounded-xl py-3 mt-2 mb-1 text-base hover:bg-gray-900"
       >
         New Post <span role="img" aria-label="memo">📝</span>
+      </CustomButton>
+
+      <CustomButton
+        onClick={() => goTo("/post/4")}
+        className="w-[90%] bg-white rounded-xl py-3 mt-2 mb-1 text-base hover:bg-slate-100"
+      >
+        Our Team <span role="img" aria-label="team">📝</span>
+      </CustomButton>
+
+      <CustomButton
+        onClick={() => goTo("/post/3")}
+        className="w-[90%] bg-white rounded-xl py-3 mt-2 mb-8 text-base hover:bg-slate-100"
+      >
+        현지학기 소개 <span role="img" aria-label="현지학기제">📝</span>
       </CustomButton>
 
       {/* Filter 버튼 */}
