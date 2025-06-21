@@ -9,6 +9,7 @@ import Login from "./pages/Login/Login";
 import PostEdit from "./pages/PostEdit/PostEdit";
 import PostCreate from "./pages/PostCreate/PostCreate";
 import OurTeam from "./pages/OurTeam/OurTeam";
+import JapanProgram from "./pages/JapanProgram/JapanProgram";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/post/edit/:id" element={<PostEdit />} />
         <Route path="/post/create" element={<PostCreate />} />
         <Route path="/our-team" element={<OurTeam />} />
+        <Route path="/program-introduce" element={<JapanProgram />} />
 
       </Routes>
     </BrowserRouter>
