@@ -12,7 +12,7 @@ function AlertPopup({ show, onYes, onNo, message }) {
   if (!show) return null; // show가 false면 렌더링하지 않음
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-[#fcfcf8] bg-opacity-60 flex justify-center items-center z-50"> {/* 반투명 오버레이 */}
+    <div className="fixed top-0 left-0 w-full h-full bg-[#fcfcf8] bg-opacity-60 flex justify-center items-center z-50 z-[9999]"> {/* 반투명 오버레이 */}
       <div className="bg-white bg-opacity-90 p-6 rounded-xl w-80 text-center shadow-lg"> {/* 실제 팝업 박스 */}
         <p className="mb-6 text-lg font-medium">{message}</p> {/* 안내 문구 */}
 
